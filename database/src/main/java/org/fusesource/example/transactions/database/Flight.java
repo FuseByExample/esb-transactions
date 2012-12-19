@@ -10,22 +10,13 @@ import java.util.Date;
 @Table(name = "FLIGHTS")
 public class Flight {
 
-    private Long id;
     private String number;
-    private String from;
-    private String to;
+    private String departure;
+    private String arrival;
     private Date date;
 
     @Id
-    @GeneratedValue
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    @Column(length = 12)
     public String getNumber() {
         return number;
     }
@@ -34,20 +25,22 @@ public class Flight {
         this.number = number;
     }
 
-    public String getFrom() {
-        return from;
+    @Column(length = 3)
+    public String getDeparture() {
+        return departure;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setDeparture(String departure) {
+        this.departure = departure;
     }
 
-    public String getTo() {
-        return to;
+    @Column(length = 3)
+    public String getArrival() {
+        return arrival;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
     }
 
     public Date getDate() {

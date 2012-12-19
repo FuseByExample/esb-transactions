@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <parent>
     <artifactId>transactions</artifactId>
     <groupId>org.fusesource.example</groupId>
@@ -11,38 +12,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.fusesource.example.transactions</groupId>
-  <artifactId>routing</artifactId>
+  <artifactId>datasource</artifactId>
   <packaging>bundle</packaging>
-
-  <name>Fuse By Example :: Transactions :: Routing</name>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.fusesource.example.transactions</groupId>
-      <artifactId>database</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-camel</artifactId>
-    </dependency>
-  </dependencies>
+  <name>Fuse By Example :: Transactions :: Datasource</name>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Private-Package>org.fusesource.example.transactions.routes</Private-Package>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>

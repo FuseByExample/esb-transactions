@@ -35,12 +35,21 @@
   </properties>
 
   <modules>
+    <module>datasource</module>
     <module>database</module>
     <module>routing</module>
+    <module>features</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <!-- project dependencies -->
+      <dependency>
+        <groupId>org.fusesource.example.transactions</groupId>
+        <artifactId>database</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-camel</artifactId>

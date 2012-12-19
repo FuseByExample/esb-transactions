@@ -37,6 +37,13 @@
     <property name="transactionManager" ref="txManager" />
   </bean>
 
+  <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <property name="transactionManager" ref="txManager"/>
+  </bean>
+
+  <osgi:reference id="entityManagerFactory" interface="javax.persistence.EntityManagerFactory" />
+
   <osgi:reference id="txManager" interface="org.springframework.transaction.PlatformTransactionManager" />
 
   <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">

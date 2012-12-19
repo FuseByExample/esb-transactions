@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="transactions-example-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+  <feature name="transactions-datasource">
+    <bundle>mvn:org.apache.derby/derby/10.9.1.0</bundle>
+    <bundle>mvn:org.fusesource.example.transactions/datasource/1.0-SNAPSHOT</bundle>
+  </feature>
+
+  <feature name='camel-hibernate-blueprint' description='Sample with Camel, Hibernate &amp; Aries' version='${project.version}' resolver='(obr)'>
+    <feature version='${aries.version}'>jpa</feature>
+    <feature version='${aries.version}'>jndi</feature>
+    <feature version='${camel.version}'>camel-blueprint</feature>
+    <feature version='${camel.version}'>camel-jpa</feature>
+    <bundle>mvn:org.apache.derby/derby/${derby.version}</bundle>
+    <bundle>mvn:net.iocanel.samples.ariescameljpa/net.iocanel.samples.ariescameljpa.datasource/${project.version}</bundle>
+    <bundle>mvn:net.iocanel.samples.ariescameljpa/net.iocanel.samples.ariescameljpa.jpa/${project.version}</bundle>
+  </feature>
+
+</features>

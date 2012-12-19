@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           default-activation="lazy">
+
+  <bean id="derbyXADataSource" class="org.apache.derby.jdbc.ClientXADataSource">
+    <property name="databaseName" value="transactions"/>
+    <property name="serverName" value="localhost" />
+  </bean>
+
+  <service ref="derbyXADataSource" interface="javax.sql.XADataSource">
+    <service-properties>
+      <entry key="osgi.jndi.service.name" value="jdbc/derbyXADB"/>
+      <entry key="datasource.name" value="derbyXADB"/>
+    </service-properties>
+  </service>
+
+</blueprint>
