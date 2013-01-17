@@ -3,6 +3,7 @@ package org.fusesource.example.transactions.routes;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.spring.SpringRouteBuilder;
 import org.fusesource.example.transactions.database.Flight;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.Random;
  * Time: 12:17
  * To change this template use File | Settings | File Templates.
  */
-public class TransactionalRouteBuilder extends RouteBuilder {
+public class TransactionalRouteBuilder extends SpringRouteBuilder {
 
     @Override
     public void configure() throws Exception {
