@@ -22,6 +22,8 @@ In this example, the bundle id is 268.  Using the `osgi:ls` command, we can see 
 * secondly, Aries JTA has added a corresponding `javax.sql.DataSource` and added the `aries.xa.aware = true` property to it to indicate an XA-aware data source
 * finally, the Blueprint extender mechanism also published the Blueprint container (containg our data source bean definitions) it created
 
+This is what the `osgi:ls` output looks like
+
     FuseESB:karaf@root> osgi:ls 268
 
     Fuse By Example :: Transactions :: Datasource (268) provides:

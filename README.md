@@ -74,9 +74,9 @@ We will refer to the directory that contains your Fuse ESB installation as `$ESB
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
 message broker and send messages to a queue.  Edit the `$ESB_HOME/etc/users.properties` file and add a line that says:
 
-   user=password,admin
+    user=password,admin
 
-The syntax for this line is <userid>=<password>,<group>, so we're creating a user called `user` with a password `password`
+The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;group&gt;, so we're creating a user called `user` with a password `password`
 who's a member of the `admin` group.
 
 ### Start Fuse ESB
@@ -103,7 +103,7 @@ Using `osgi:list` in the console, you should now see this demo's bundles at the 
 Open `jconsole` and connect to the running Fuse ESB Enterprise instance.  If the instance is running locally, connect to
 the process called `org.apache.karaf.main.Main`.
 
-On the MBeans tab, navigate to `org.apache.activemq` &rarr; `fusemq` &rarr; `Queue` &rarr; `Input.Orders`.  Send a few
+On the MBeans tab, navigate to `org.apache.activemq` &rarr; `fusemq` &rarr; `Queue` &rarr; `Input.Flights`.  Send a few
 messages to the queue using the `sendTextMessage(String body, String user, String password)` operation.  For the second
 and third password, use the username and password you configured earlier.  The first parameter will become the flight ID
 in the database, so just use your imagination for that one ;)

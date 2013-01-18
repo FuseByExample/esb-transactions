@@ -1,32 +1,51 @@
+/**
+ * Copyright (c) Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.fusesource.example.transactions.routes;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.fusesource.example.transactions.database.Flight;
 
-import java.util.Date;
 import java.util.Random;
 
+import static org.fusesource.example.transactions.routes.Airports.randomAirport;
+
 /**
- * Created with IntelliJ IDEA.
- * User: gert
- * Date: 27/11/12
- * Time: 12:17
- * To change this template use File | Settings | File Templates.
+ * Camel route builder defining our transactional route.  Because we want to maximize the level of support Spring offers for transactions,
+ * we are extending SpringRouteBuilder instead of a plain RouteBuilder.
+ *
+ * The transacted() DSL keyword  will configure the route with transaction support and add a specific transaction-aware error handler.
+ * It will lookup the transactional policy in the Spring XML file by default, but you can also specify one explicitly.
  */
 public class TransactionalRouteBuilder extends SpringRouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("amq://Input.Orders?username=admin&password=admin")
-                .transacted()
-                .to("log:Orders?showAll=true")
-                .process(new ConvertToJpaBeanProcessor())
-                .to("jpa://org.fusesource.example.transactions.database.Flight");
+        from("amq://Input.Flights?username=admin&password=admin")
+            .transacted()
+            .log("Received JMS message ${body}")
+            .process(new ConvertToJpaBeanProcessor())
+            .log("Storing ${body} in the database")
+            .to("jpa://org.fusesource.example.transactions.database.Flight");
     }
 
+    /*
+     * Just a simple Camel processor to transform a plain text message into a Flight object.
+     */
     private class ConvertToJpaBeanProcessor implements Processor {
 
         public void process(Exchange exchange) throws Exception {
@@ -36,19 +55,10 @@ public class TransactionalRouteBuilder extends SpringRouteBuilder {
 
             Flight flight = new Flight();
             flight.setNumber(number);
-            flight.setDeparture("BRU");
-            flight.setArrival("LON");
-            flight.setDate(new Date());
-
-            if (new Random().nextInt(3) == 2) {
-                System.out.println("Uh oh, Murphy's Law in action - let's try to make this fail!");
-
-                // setting the flight number to null - this will cause the INSERT to fail!
-                flight.setNumber(null);
-            }
+            flight.setDeparture(randomAirport());
+            flight.setArrival(randomAirport());
 
             exchange.getOut().setBody(flight);
         }
-
     }
 }

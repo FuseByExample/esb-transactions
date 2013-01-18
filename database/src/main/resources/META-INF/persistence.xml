@@ -46,7 +46,6 @@
       You can also use JNDI references to refer to services in the OSGi Service Registry, which is what we're using here.
      -->
     <jta-data-source>osgi:service/jdbc/transactions</jta-data-source>
-    <non-jta-data-source>osgi:service/jdbc/transactions</non-jta-data-source>
 
     <!--
       Defining the entity classes that are available in this persistence unit.  In our example, we only have one entity
@@ -60,6 +59,10 @@
       these properties contain additional configuration for OpenJPA.
     -->
     <properties>
+      <!--
+        Setting ConnectionFactoryMode to managed because DataSource is enlisted in transactions automatically by Aries JTA
+      -->
+      <property name="openjpa.ConnectionFactoryMode" value="managed"/>
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
       <property name="openjpa.jdbc.DBDictionary" value="derby"/>
       <property name="openjpa.Log" value="DefaultLevel=INFO"/>

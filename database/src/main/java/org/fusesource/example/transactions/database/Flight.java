@@ -58,4 +58,9 @@ public class Flight {
     public void setArrival(String arrival) {
         this.arrival = arrival;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[flight %s from %s to %s]", number, departure, arrival);
+    }
 }

@@ -18,33 +18,51 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:osgi="http://www.springframework.org/schema/osgi"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/beans/spring-beans.xsd
            http://camel.apache.org/schema/spring
 	         http://camel.apache.org/schema/spring/camel-spring.xsd
-	         http://www.springframework.org/schema/osgi
-           http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+	       http://www.springframework.org/schema/osgi
+             http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
+  <!--
+    This sets up the Camel context - routes are defined in the Java Fluent API in the TransactionalRouteBuilder class
+  -->
   <camelContext id="transactions.camel" xmlns="http://camel.apache.org/schema/spring">
     <package>org.fusesource.example.transactions.routes</package>
   </camelContext>
 
-  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
-  </bean>
+  <!--
+    Aries JTA provides a transaction manager that implements org.springframework.transaction.PlatformTransactionManager.
 
+    We can use <osgi:reference/> to lookup this service from the OSGi Service Registry and start using it in this Spring file
+  -->
+  <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" />
+
+  <!--
+    Setting up the amq:// components with an XA-aware connnection factory and a reference to the global transaction manager
+    reference we acquired.
+  -->
   <bean id="amq" class="org.apache.activemq.camel.component.ActiveMQComponent">
     <property name="connectionFactory" ref="connectionFactory" />
     <property name="transactionManager" ref="transactionManager" />
   </bean>
 
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616" />
+  </bean>
+
+  <!--
+    Setting up the jta:// component with the entity manager factory that we set up in the 'database' bundle.
+  -->
   <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
     <property name="entityManagerFactory" ref="entityManagerFactory"/>
   </bean>
 
   <osgi:reference id="entityManagerFactory" interface="javax.persistence.EntityManagerFactory" />
 
-  <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" />
-
+  <!--
+    Defines the transactional policy we want to use
+  -->
   <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
     <property name="transactionManager" ref="transactionManager" />
   </bean>
