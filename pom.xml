@@ -26,8 +26,8 @@
   <name>Fuse By Example :: Transactions</name>
 
   <properties>
-    <activemq.version>5.7.0.fuse-71-040</activemq.version>
-    <camel.version>2.10.0.fuse-71-040</camel.version>
+    <activemq.version>5.7.0.fuse-71-047</activemq.version>
+    <camel.version>2.10.0.fuse-71-047</camel.version>
     <hibernate.version>4.1.8.Final</hibernate.version>
     <slf4j.version>1.6.6</slf4j.version>
 
@@ -90,6 +90,17 @@
   </build>
 
   <repositories>
+      <repository>
+        <id>release.fusesource.org</id>
+        <name>FuseSource Release Repository</name>
+        <url>http://repo.fusesource.com/nexus/content/repositories/releases</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+    </repository>
     <repository>
       <id>fusesource.ea</id>
       <url>http://repo.fusesource.com/nexus/content/groups/ea</url>
