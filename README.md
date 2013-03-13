@@ -38,7 +38,7 @@ We will refer to the directory that contains your Apache Derby installation as `
 ### Start the network server
 Start Apache Derby's network server with
 
-* on Linux/Unix/MacOS: `DERBY_HOME/bin/startNetworkServer.sh`
+* on Linux/Unix/MacOS: `DERBY_HOME/bin/startNetworkServer`
 * on Windows: `DERBY_HOME\bin\startNetworkServer.bat`
 
 ### Create the database tables
@@ -74,9 +74,9 @@ We will refer to the directory that contains your Fuse ESB installation as `$ESB
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
 message broker and send messages to a queue.  Edit the `$ESB_HOME/etc/users.properties` file and add a line that says:
 
-    user=password,admin
+    admin=admin,admin
 
-The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;group&gt;, so we're creating a user called `user` with a password `password`
+The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;group&gt;, so we're creating a user called `admin` with a password `admin`
 who's a member of the `admin` group.
 
 ### Start Fuse ESB
@@ -105,7 +105,7 @@ the process called `org.apache.karaf.main.Main`.
 
 On the MBeans tab, navigate to `org.apache.activemq` &rarr; `fusemq` &rarr; `Queue` &rarr; `Input.Flights`.  Send a few
 messages to the queue using the `sendTextMessage(String body, String user, String password)` operation.  For the second
-and third password, use the username and password you configured earlier.  The first parameter will become the flight ID
+and third parameter, use the username and password you configured earlier.  The first parameter will become the flight ID
 in the database, so just use your imagination for that one ;)
 
 ### Verifying the result
