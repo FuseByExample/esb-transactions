@@ -1,23 +1,26 @@
-# Transactions
+# ESB Transactions
 
 ## Overview
 This example will show you how to leverage the JTA transaction manager provided by Fuse ESB when working with JMS
 or JTA Camel endpoints.  We will setup a route that reads messages from a queue and inserts information into a database
-using JTA and deploy that onto Fuse ESB 7.1.
+using JTA and XA transactions and deploy that onto JBoss Fuse 6.0.
 
 ## What You Will Learn
 In studying this example you will learn:
 - how to set up an XA-aware DataSource
 - how to configure a JTA persistence unit
-- how to define a transactional route
 - how to leverage Fuse ESB's JTA and JPA support in your routes
+- how to configure a JMS component to support XA
+- how to define a transactional route
+- how to configure a ResourceManager that can recover XA transactions after a crash
+
 
 ## Prerequisites
 Before building and running this example you need:
 
 * Maven 3.0.4 or higher
 * JDK 1.6
-* Fuse ESB Enterprise 7.1
+* JBoss Fuse 6.0.0
 * Apache Derby 10.9.1.0 or higher
 
 ## Files in the Example
@@ -79,22 +82,22 @@ message broker and send messages to a queue.  Edit the `$ESB_HOME/etc/users.prop
 The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;group&gt;, so we're creating a user called `admin` with a password `admin`
 who's a member of the `admin` group.
 
-### Start Fuse ESB
-Start Fuse ESB with
+### Start JBoss Fuse
+Start JBoss Fuse with these commands
 
-* on Linux/Unix/MacOS: `bin/fuseesb`
-* on Windows: `bin\fuseesb.bat`
+* on Linux/Unix/MacOS: `bin/fuse`
+* on Windows: `bin\fuse.bat`
 
 ### Adding the features repository
 To allow for easy installation of the example, we created a features descriptor.  On Fuse ESB's console, add the
 extra features repository with this command:
 
-    FuseESB:karaf@root> features:addurl mvn:org.fusesource.example.transactions/features/1.0-SNAPSHOT/xml/features
+    JBossFuse:karaf@root> features:addurl mvn:org.fusesource.example.transactions/features/1.0-SNAPSHOT/xml/features
 
 ### Install the example using the feature
 First, install the feature itself using this command:
 
-    FuseESB:karaf@root> features:install transactions-openjpa-demo
+    JBossFuse:karaf@root> features:install transactions-openjpa-demo
 
 Using `osgi:list` in the console, you should now see this demo's bundles at the bottom of the list.
 
@@ -108,6 +111,11 @@ messages to the queue using the `sendTextMessage(String body, String user, Strin
 and third parameter, use the username and password you configured earlier.  The first parameter will become the flight ID
 in the database, so just use your imagination for that one ;)
 
+The ESB log file will contain logging output similar to :
+2013-03-13 12:33:28,946 | INFO| r[Input.Flights] | route1 | ? ? | 130 - org.apache.camel.camel-core - 2.10.0.redhat-60015 | Received JMS message TXL-1000
+2013-03-13 12:33:28,958 | INFO| r[Input.Flights] | route1 | ? ? | 130 - org.apache.camel.camel-core - 2.10.0.redhat-60015 | Storing [flight TXL-1000 from DEN to LAS] in the database
+
+
 ### Verifying the result
 Now, head back to `ij` and run this SQL query:
 
@@ -119,3 +127,19 @@ You will see new database rows for every message you sent, using the message bod
 For more information see:
 
 * Fuse ESB Enterprise 7.1 - [EIP Transaction Guide](http://fusesource.com/docs/esbent/7.1/camel_tx/front.htm) (registration required)
+
+
+
+## NOTE: 
+For more verbose logging about the use of XA transactions, this logging 
+configuration can be applied on the Karaf shell:
+
+log:set DEBUG org.apache.activemq.transaction
+log:set DEBUG org.springframework.transaction
+log:set DEBUG org.springframework.jms.connection.JmsTransactionManager
+log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager
+log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource
+log:set DEBUG org.apache.geronimo.transaction.log
+log:set DEBUG org.jencks
+
+This will log every tx.begin, tx.prepare and tx.commit operation to data/log/fuse.log.

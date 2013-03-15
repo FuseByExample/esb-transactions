@@ -31,6 +31,16 @@
   <packaging>bundle</packaging>
   <name>Fuse By Example :: Transactions :: Datasource</name>
 
+  <dependencies>
+
+
+   <dependency>
+      <groupId>org.apache.geronimo.components</groupId>
+      <artifactId>geronimo-connector</artifactId>
+      <version>2.2.2</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -39,6 +49,4 @@
       </plugin>
     </plugins>
   </build>
-
-
 </project>

@@ -18,14 +18,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:osgi="http://www.springframework.org/schema/osgi"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-             http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://camel.apache.org/schema/spring
-	         http://camel.apache.org/schema/spring/camel-spring.xsd
-	       http://www.springframework.org/schema/osgi
-             http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://camel.apache.org/schema/spring
+	   http://camel.apache.org/schema/spring/camel-spring.xsd
+	   http://www.springframework.org/schema/osgi
+	   http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
   <!--
-    This sets up the Camel context - routes are defined in the Java Fluent API in the TransactionalRouteBuilder class
+    This sets up the Camel context - routes are defined in the Java Fluent API 
+    in the TransactionalRouteBuilder class
   -->
   <camelContext id="transactions.camel" xmlns="http://camel.apache.org/schema/spring">
     <package>org.fusesource.example.transactions.routes</package>
@@ -33,26 +34,57 @@
 
   <!--
     Aries JTA provides a transaction manager that implements org.springframework.transaction.PlatformTransactionManager.
-
     We can use <osgi:reference/> to lookup this service from the OSGi Service Registry and start using it in this Spring file
   -->
-  <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" />
+  <osgi:reference id="platformTxManager" interface="org.springframework.transaction.PlatformTransactionManager" />
+  <osgi:reference id="transactionManager" interface="javax.transaction.TransactionManager" />
+  <!-- needed by the ResourceManager in order to provide XA recovery -->
+  <osgi:reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
 
   <!--
-    Setting up the amq:// components with an XA-aware connnection factory and a reference to the global transaction manager
-    reference we acquired.
+    Setting up the amq:// components with an XA-aware connnection factory and a 
+    reference to the global transaction manager reference we acquired.
   -->
-  <bean id="amq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-    <property name="connectionFactory" ref="connectionFactory" />
+  <bean id="amq" class="org.apache.camel.component.jms.JmsComponent">
+    <property name="configuration" ref="AMQConfig" />
+  </bean>
+
+  <bean id="AMQConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="XAPooledCF" />
+    <property name="transacted" value="false" />
+    <property name="transactionManager" ref="platformTxManager" />
+    <property name="maxConcurrentConsumers" value="1" />
+    <property name="cacheLevelName" value="CACHE_NONE" />
+  </bean>
+    
+  <bean id="XAPooledCF" class="org.apache.activemq.pool.JcaPooledConnectionFactory" init-method="start" destroy-method="stop">
+    <property name="name" value="activemq.default" />
+    <property name="maxConnections" value="1" />
+    <property name="connectionFactory" ref="AmqXaCF" />
     <property name="transactionManager" ref="transactionManager" />
   </bean>
+    
+  <bean id="AmqXaCF" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+    <property name="brokerURL" value="failover:(tcp://localhost:61616)?jms.prefetchPolicy.all=1" />
+    <property name="userName" value="admin" />
+    <property name="password" value="admin" />
+  </bean>
 
-  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
+  <!-- A ResourceManager is needed for every transactional resource in order to
+       recover any outstanding transactions after a crash.
+       It will register with the Aries transaction manager, which then calls 
+       recoverResource() on the transactional resource itself. 
+  -->
+  <bean id="resourceManager-AMQ" class="org.apache.activemq.pool.ActiveMQResourceManager" init-method="recoverResource">
+    <property name="transactionManager" ref="recoverableTxManager" />
+    <!-- CF must be of type ActiveMQConnectionFactory, otherwise no recovery will occur -->
+    <property name="connectionFactory" ref="AmqXaCF" />
+    <property name="resourceName" value="activemq.default" />
   </bean>
 
   <!--
-    Setting up the jta:// component with the entity manager factory that we set up in the 'database' bundle.
+    Setting up the jta:// component with the entity manager factory that we set 
+    up in the 'database' bundle.
   -->
   <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
     <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -61,10 +93,10 @@
   <osgi:reference id="entityManagerFactory" interface="javax.persistence.EntityManagerFactory" />
 
   <!--
-    Defines the transactional policy we want to use
+    Defines the transactional policy we want to use.
   -->
   <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
-    <property name="transactionManager" ref="transactionManager" />
+    <property name="transactionManager" ref="platformTxManager" />
   </bean>
 
 </beans>
