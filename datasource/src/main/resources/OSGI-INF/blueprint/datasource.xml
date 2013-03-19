@@ -24,6 +24,7 @@
   -->
   <reference id="transactionManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
 
+  <!-- Sets up a Geronimo JCA connection manager which also supports pooling --> 
   <bean id="connectionManager" class="org.apache.geronimo.connector.outbound.GenericConnectionManager">
     <argument index="0">
       <bean class="org.apache.geronimo.connector.outbound.connectionmanagerconfig.XATransactions">
@@ -32,6 +33,7 @@
       </bean>
     </argument>
     <argument index="1">
+      <!-- http://geronimo.apache.org/maven/server/modules/geronimo-connector/apidocs/org/apache/geronimo/connector/outbound/connectionmanagerconfig/PartitionedPool.html -->
       <bean class="org.apache.geronimo.connector.outbound.connectionmanagerconfig.PartitionedPool">
 	<argument value="10" />
 	<argument value="0" />
@@ -56,15 +58,22 @@
   </bean>
   <service ref="classLoader" auto-export="all-classes" />
 
+  <!-- Tranql provides the ManagedConnectionFactory but delegates all the work to the JDBC drivers.
+       There are factories for every major JDBC provider at 
+       http://search.maven.org/#search|ga|1|tranql-connector
+       You would need to configure your JDBC provider here.
+  -->
   <bean id="jdbcManagedConnectionFactory" class="org.tranql.connector.derby.ClientXAMCF">
     <property name="databaseName" value="transactions"/>    
     <property name="serverName" value="localhost" />  
   </bean>
 
+  <!-- Creates the JDBC ConnectionFactory -->
   <bean id="derby-cf" factory-ref="jdbcManagedConnectionFactory" factory-method="createConnectionFactory">
     <argument ref="connectionManager" />
   </bean> 
 
+  <!-- Exports the JDBC ConnectionFactory -->
   <service ref="derby-cf" interface="javax.sql.DataSource">
     <service-properties>      
       <entry key="osgi.jndi.service.name" value="jdbc/transactions"/>      
