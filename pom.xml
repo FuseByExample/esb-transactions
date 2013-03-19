@@ -26,8 +26,8 @@
   <name>Fuse By Example :: Transactions</name>
 
   <properties>
-    <activemq.version>5.7.0.fuse-71-047</activemq.version>
-    <camel.version>2.10.0.fuse-71-047</camel.version>
+    <activemq.version>5.8.0.redhat-60019</activemq.version>
+    <camel.version>2.10.0.redhat-60019</camel.version>
     <hibernate.version>4.1.8.Final</hibernate.version>
     <slf4j.version>1.6.6</slf4j.version>
 
@@ -89,7 +89,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.0</version>
-          <extensions>true</extensions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
         </plugin>
       </plugins>
     </pluginManagement>

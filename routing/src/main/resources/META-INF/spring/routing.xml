@@ -42,8 +42,11 @@
   <osgi:reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
 
   <!--
-    Setting up the amq:// components with an XA-aware connnection factory and a 
-    reference to the global transaction manager reference we acquired.
+    Setting up the amq:// components with a configuration that points to the JcaPooledConnectionFactory and the global
+    Spring PlatformTransactiongManager.
+
+    Note that transacted is set to 'false' because it's the JTA TransactionManager that manages the transactions and not
+    the JMS component itself.
   -->
   <bean id="amq" class="org.apache.camel.component.jms.JmsComponent">
     <property name="configuration" ref="AMQConfig" />
@@ -56,14 +59,20 @@
     <property name="maxConcurrentConsumers" value="1" />
     <property name="cacheLevelName" value="CACHE_NONE" />
   </bean>
-    
+
+  <!--
+    The JcaPooledConnectionFactory ensures that the JMS Sessions get enlisted in the global transaction manager
+  -->
   <bean id="XAPooledCF" class="org.apache.activemq.pool.JcaPooledConnectionFactory" init-method="start" destroy-method="stop">
     <property name="name" value="activemq.default" />
     <property name="maxConnections" value="1" />
     <property name="connectionFactory" ref="AmqXaCF" />
     <property name="transactionManager" ref="transactionManager" />
   </bean>
-    
+
+  <!--
+    Defines an ActiveMQ XA-aware ConnectionFactory
+  -->
   <bean id="AmqXaCF" class="org.apache.activemq.ActiveMQXAConnectionFactory">
     <property name="brokerURL" value="failover:(tcp://localhost:61616)?jms.prefetchPolicy.all=1" />
     <property name="userName" value="admin" />
