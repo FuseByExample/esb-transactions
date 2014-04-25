@@ -30,7 +30,8 @@
          following bundles to be installed. 
          See Notes in datasource/src/main/resources/OSGI-INF/blueprint/datasource.xml
     -->
-    <bundle>mvn:org.apache.geronimo.components/geronimo-connector/2.2.2</bundle>
+    <bundle>mvn:javax.validation/validation-api/1.1.0.Final</bundle>
+    <bundle>mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle>
     <bundle>wrap:mvn:org.tranql/tranql-connector/1.7</bundle>
     <bundle>wrap:mvn:org.tranql/tranql-connector-derby-common/1.4</bundle>
     <!-- end of bundles needed for workaround -->

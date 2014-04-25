@@ -32,6 +32,6 @@ public class GenericResourceManager {
 
     public void doRecovery() {
 	logger.info("Recovering XA resource " + managedConnectionFactory);
-	connectionManagerContainer.doRecovery(managedConnectionFactory);
+	connectionManagerContainer.doRecovery();
     }
 }

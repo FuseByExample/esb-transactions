@@ -49,8 +49,9 @@
     <argument index="2"><null /></argument>
     <argument index="3"><null /></argument>
     <argument index="4" ref="transactionManager" />
-    <argument index="5" value="Derby-DS" />
-    <argument index="6" ref="classLoader" />
+    <argument index="5" ref="jdbcManagedConnectionFactory" />
+    <argument index="6" value="Derby-DS" />
+    <argument index="7" ref="classLoader" />
   </bean>
   
   <bean id="classLoader" class="org.apache.aries.util.AriesFrameworkUtil" factory-method="getClassLoader">
