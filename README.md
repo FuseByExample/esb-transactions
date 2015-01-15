@@ -19,8 +19,8 @@ In studying this example you will learn:
 Before building and running this example you need:
 
 * Maven 3.0.4 or higher
-* JDK 1.6
-* JBoss Fuse 6.1.0
+* JDK 1.7
+* JBoss Fuse 6.2.0
 * Apache Derby 10.9.1.0 or higher
 
 ## Files in the Example

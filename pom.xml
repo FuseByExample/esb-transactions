@@ -25,14 +25,20 @@
 
   <name>Fuse By Example :: Transactions</name>
 
-  <properties>
-    <activemq.version>5.9.0.redhat-610379</activemq.version>
-    <camel.version>2.12.0.redhat-610379</camel.version>
-    <hibernate.version>4.1.8.Final</hibernate.version>
-    <slf4j.version>1.6.6</slf4j.version>
+    <properties>
+        <activemq.version>5.10.0.redhat-620063</activemq.version>
+        <build.helper.maven.plugin.version>1.7</build.helper.maven.plugin.version>
+        <camel.version>2.14.0.redhat-620058</camel.version>
+        <felix.maven.bundle.plugin.version>2.5.3</felix.maven.bundle.plugin.version>
+        <hibernate.version>4.2.15.Final</hibernate.version>
+        <maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
+        <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+        <geronimo.connector.version>3.1.1</geronimo.connector.version>
+        <openjpa.version>2.3.0</openjpa.version>
+        <slf4j.version>1.6.6</slf4j.version>
 
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
   <modules>
     <module>datasource</module>
@@ -70,7 +76,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.6.6</version>
+        <version>${slf4j.version}</version>
         <scope>provided</scope>
       </dependency>
     </dependencies>
@@ -82,18 +88,18 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>2.3.7</version>
+          <version>${felix.maven.bundle.plugin.version}</version>
           <extensions>true</extensions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.0</version>
+          <version>${maven.compiler.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
+          <version>${maven.resources.plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
