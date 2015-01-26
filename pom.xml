@@ -27,7 +27,7 @@
 
     <properties>
         <activemq.version>5.10.0.redhat-620063</activemq.version>
-        <build.helper.maven.plugin.version>1.7</build.helper.maven.plugin.version>
+        <build.helper.maven.plugin.version>1.9.1</build.helper.maven.plugin.version>
         <camel.version>2.14.0.redhat-620058</camel.version>
         <felix.maven.bundle.plugin.version>2.5.3</felix.maven.bundle.plugin.version>
         <hibernate.version>4.2.15.Final</hibernate.version>
@@ -35,7 +35,7 @@
         <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
         <geronimo.connector.version>3.1.1</geronimo.connector.version>
         <openjpa.version>2.3.0</openjpa.version>
-        <slf4j.version>1.6.6</slf4j.version>
+        <slf4j.version>1.7.10</slf4j.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
