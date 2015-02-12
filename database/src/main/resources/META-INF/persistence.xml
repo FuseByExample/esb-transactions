@@ -60,9 +60,10 @@
     -->
     <properties>
       <!--
-        Setting ConnectionFactoryMode to managed because DataSource is enlisted in transactions automatically by Aries JTA
+        ConnectionFactoryMode setting does not need to be set, because jta-data-source element is already set,
+        which is sufficient to select managed mode (for container-managed JTA transactions).
       -->
-      <property name="openjpa.ConnectionFactoryMode" value="managed"/>
+      <!--property name="openjpa.ConnectionFactoryMode" value="managed"/-->
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
       <property name="openjpa.jdbc.DBDictionary" value="derby"/>
       <property name="openjpa.Log" value="DefaultLevel=INFO"/>
