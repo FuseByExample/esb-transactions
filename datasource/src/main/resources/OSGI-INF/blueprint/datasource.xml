@@ -15,85 +15,6 @@
   permissions and limitations under the License.
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-
-  <!-- ********************************************************************* -->
-  <!-- Workaround for bug http://fusesource.com/issues/browse/ENTESB-633
-       This configuration will also enlist a JDBC XA DataSource into Aries tx
-       manager. Once ENTESB-633 is fixed this config should not be needed 
-       anymore. Instead part 2 of the configuration would apply.
-  -->
-  <reference id="transactionManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
-
-  <!-- Sets up a Geronimo JCA connection manager which also supports pooling --> 
-  <bean id="connectionManager" class="org.apache.geronimo.connector.outbound.GenericConnectionManager">
-    <argument index="0">
-      <bean class="org.apache.geronimo.connector.outbound.connectionmanagerconfig.XATransactions">
-	<argument value="true" />
-	<argument value="false" />
-      </bean>
-    </argument>
-    <argument index="1">
-      <!-- http://geronimo.apache.org/maven/server/modules/geronimo-connector/apidocs/org/apache/geronimo/connector/outbound/connectionmanagerconfig/PartitionedPool.html -->
-      <bean class="org.apache.geronimo.connector.outbound.connectionmanagerconfig.PartitionedPool">
-	<argument value="10" />
-	<argument value="0" />
-	<argument value="5000" />
-	<argument value="15" />
-	<argument value="true" />
-	<argument value="false" />
-	<argument value="false" />
-	<argument value="true" />
-	<argument value="false" />
-      </bean>
-    </argument>
-    <argument index="2"><null /></argument>
-    <argument index="3"><null /></argument>
-    <argument index="4" ref="transactionManager" />
-    <argument index="5" ref="jdbcManagedConnectionFactory" />
-    <argument index="6" value="Derby-DS" />
-    <argument index="7" ref="classLoader" />
-  </bean>
-  
-  <bean id="classLoader" class="org.apache.aries.util.AriesFrameworkUtil" factory-method="getClassLoader">
-    <argument ref="blueprintBundle" />
-  </bean>
-  <service ref="classLoader" auto-export="all-classes" />
-
-  <!-- Tranql provides the ManagedConnectionFactory but delegates all the work to the JDBC drivers.
-       There are factories for every major JDBC provider at 
-       http://search.maven.org/#search|ga|1|tranql-connector
-       You would need to configure your JDBC provider here.
-  -->
-  <bean id="jdbcManagedConnectionFactory" class="org.tranql.connector.derby.ClientXAMCF">
-    <property name="databaseName" value="transactions"/>    
-    <property name="serverName" value="localhost" />  
-  </bean>
-
-  <!-- Creates the JDBC ConnectionFactory -->
-  <bean id="derby-cf" factory-ref="jdbcManagedConnectionFactory" factory-method="createConnectionFactory">
-    <argument ref="connectionManager" />
-  </bean> 
-
-  <!-- Exports the JDBC ConnectionFactory -->
-  <service ref="derby-cf" interface="javax.sql.DataSource">
-    <service-properties>      
-      <entry key="osgi.jndi.service.name" value="jdbc/transactions"/>      
-      <entry key="datasource.name" value="Derby"/>    
-    </service-properties>  
-  </service>
-
-  <!-- recoverable ResourceManager for JDBC DataSource, uses a wrapper class -->
-  <bean id="transactionRecovery" class="org.apache.aries.demo.GenericResourceManager" init-method="doRecovery">
-    <property name="connectionManagerContainer" ref="connectionManager"/>
-    <property name="managedConnectionFactory" ref="jdbcManagedConnectionFactory"/>
-  </bean>
-  
-
-  <!-- ********************************************************************* -->
-  <!-- Part 2: 
-       If bug ENTESB-633 did not exist we could auto-enlist the JDBC driver into 
-       Aries.
-  -->
   <!--
     This defines the actual data source bean. It will instantiate a new 
     ClientXADataSource instance and will use the corresponding settings to set 
@@ -101,12 +22,11 @@
     on the same machine so the server name is `localhost`. A database called 
     `transactions` has been created up-front as well (see README.md).
   -->
-  <!--
   <bean id="transactionsDataSource" class="org.apache.derby.jdbc.ClientXADataSource">
     <property name="databaseName" value="transactions"/>
     <property name="serverName" value="localhost" />
   </bean>
-  -->
+
   <!--
     We're publishing our data source into the OSGi Service Registry as a 
     `XADataSource`. This will allow Aries JTA to automatically enlist this 
@@ -115,12 +35,10 @@
     lookup this data source from our JPA persistence.xml in the `database` 
     module afterwards.
   -->
-  <!--
   <service ref="transactionsDataSource" interface="javax.sql.XADataSource">
     <service-properties>
       <entry key="osgi.jndi.service.name" value="jdbc/transactions"/>
       <entry key="datasource.name" value="Derby"/>
     </service-properties>
   </service>
-  -->
 </blueprint>
