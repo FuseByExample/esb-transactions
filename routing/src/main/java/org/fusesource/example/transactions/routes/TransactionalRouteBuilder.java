@@ -28,15 +28,13 @@ import static org.fusesource.example.transactions.routes.Airports.randomAirport;
  * Camel route builder defining our transactional route.  Because we want to maximize the level of support Spring offers for transactions,
  * we are extending SpringRouteBuilder instead of a plain RouteBuilder.
  *
- * The transacted() DSL keyword  will configure the route with transaction support and add a specific transaction-aware error handler.
- * It will lookup the transactional policy in the Spring XML file by default, but you can also specify one explicitly.
+ * Transaction demarcation (begin() and commit()) is performed by the transaction-aware 'amq' endpoint. Hence, there is no need to add the transacted() DSL keyword to the route.
  */
 public class TransactionalRouteBuilder extends SpringRouteBuilder {
 
     @Override
     public void configure() throws Exception {
         from("amq://Input.Flights?username=admin&password=admin")
-            .transacted()
             .log("Received JMS message ${body}")
             .process(new ConvertToJpaBeanProcessor())
             .log("Storing ${body} in the database")
