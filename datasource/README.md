@@ -7,10 +7,6 @@ relational database.
 We are using Blueprint to define the data source bean and publish it into the OSGi Service Registry.  Have a look at
 `src/main/resources/OSGI-INF/blueprint/datasource.xml` for more details about how this done.
 
-Due to bug http://fusesource.com/issues/browse/ENTESB-633 it is not possible to
-have the configured JDBC DataSource getting auto-enlisted into Aries.
-Instead a workaround solution is presented in src/main/resources/OSGI-INF/blueprint/datasource.xml
-
 
 ## Checking the OSGi Service Registry
 After the bundle is started, we can use the Fuse ESB Enterprise console to look at the registered objects in the registry.
