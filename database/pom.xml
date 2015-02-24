@@ -69,38 +69,35 @@
 
       <!--
         The OpenJPA project recommends byte-code weaving to enhance the entity classes.  For deployment in Fuse ESB Enterprise,
-        this needs to be done at build-time, using the maven-antrun-plugin definition below.
+        this needs to be done at build-time, using the openjpa-maven-plugin definition below.
       -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
+        <groupId>org.apache.openjpa</groupId>
+        <artifactId>openjpa-maven-plugin</artifactId>
+        <version>${openjpa.version}</version>
+        <configuration>
+          <persistenceXmlFile>${project.basedir}/src/main/resources/META-INF/persistence.xml</persistenceXmlFile>
+          <addDefaultConstructor>true</addDefaultConstructor>
+          <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+        </configuration>
         <executions>
           <execution>
-            <phase>compile</phase>
-            <configuration>
-              <tasks>
-                <path id="enhance.path.ref">
-                  <fileset dir="${project.build.outputDirectory}">
-                    <include name="Flight.class"/>
-                  </fileset>
-                </path>
-                <pathconvert property="enhance.files" refid="enhance.path.ref" pathsep=" "/>
-                <java classname="org.apache.openjpa.enhance.PCEnhancer">
-                  <arg line="-p persistence.xml"/>
-                  <arg line="${enhance.files}"/>
-                  <classpath>
-                    <path refid="maven.dependency.classpath"/>
-                    <path refid="maven.compile.classpath"/>
-                  </classpath>
-                </java>
-              </tasks>
-            </configuration>
+            <id>enhance</id>
+            <phase>process-classes</phase>
             <goals>
-              <goal>run</goal>
+              <goal>enhance</goal>
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>${openjpa.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
+
     </plugins>
   </build>
 
