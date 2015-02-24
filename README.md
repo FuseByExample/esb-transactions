@@ -21,7 +21,9 @@ Before building and running this example you need:
 * Maven 3.0.4 or higher
 * JDK 1.7
 * JBoss Fuse 6.2.0
-* Apache Derby 10.9.1.0 or higher
+* Apache Derby 10.11.1.1 or higher
+
+Note: If you use Java 7 or 8, you _must_ install Derby version of at least 10.11.1.1 to avoid problems with the Java security manager.
 
 ## Files in the Example
 * `pom.xml` - the Maven POM file for building the example
@@ -43,6 +45,9 @@ Start Apache Derby's network server with
 
 * on Linux/Unix/MacOS: `DERBY_HOME/bin/startNetworkServer`
 * on Windows: `DERBY_HOME\bin\startNetworkServer.bat`
+
+If you have problems with the Java security manager when you try to start the
+Derby server, this probably means you are using Java 7 or 8 with a Derby version lower than 10.11.1.1. The solution is to upgrade Derby.
 
 ### Create the database tables
 Open Derby's interactive shell:
@@ -77,10 +82,10 @@ We will refer to the directory that contains your Fuse ESB installation as `$ESB
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
 message broker and send messages to a queue.  Edit the `$ESB_HOME/etc/users.properties` file and add a line that says:
 
-    admin=admin,admin
+    admin=admin,Administrator
 
-The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;group&gt;, so we're creating a user called `admin` with a password `admin`
-who's a member of the `admin` group.
+The syntax for this line is &lt;userid&gt;=&lt;password&gt;,&lt;role&gt;, so we're creating a user called `admin` with a password `admin`
+who has the `Administrator` role.
 
 ### Start JBoss Fuse
 Start JBoss Fuse with these commands
@@ -106,7 +111,7 @@ Using `osgi:list` in the console, you should now see this demo's bundles at the 
 Open `jconsole` and connect to the running Fuse ESB Enterprise instance.  If the instance is running locally, connect to
 the process called `org.apache.karaf.main.Main`.
 
-On the MBeans tab, navigate to `org.apache.activemq` &rarr; `fusemq` &rarr; `Queue` &rarr; `Input.Flights`.  Send a few
+On the MBeans tab, navigate to `org.apache.activemq` &rarr; `Broker` &rarr; `amq` &rarr; `Queue` &rarr; `Input.Flights`.  Send a few
 messages to the queue using the `sendTextMessage(String body, String user, String password)` operation.  For the second
 and third parameter, use the username and password you configured earlier.  The first parameter will become the flight ID
 in the database, so just use your imagination for that one ;)
@@ -126,7 +131,7 @@ You will see new database rows for every message you sent, using the message bod
 ## More information
 For more information see:
 
-* Fuse ESB Enterprise 7.1 - [EIP Transaction Guide](http://fusesource.com/docs/esbent/7.1/camel_tx/front.htm) (registration required)
+* JBoss Fuse 6.1 - [Transaction Guide](https://access.redhat.com/site/documentation/en-US/Red_Hat_JBoss_Fuse/6.1/html/Transaction_Guide/index.html)
 
 
 
