@@ -28,7 +28,7 @@
   <!--
     Marking transaction-type JTA because we will be using Aries JTA to handle the transaction
   -->
-  <persistence-unit name="transactionsExcample" transaction-type="JTA">
+  <persistence-unit name="transactionsExample" transaction-type="JTA">
 
     <!--
       A human-readable description for the persistence unit.
