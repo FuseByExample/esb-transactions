@@ -43,8 +43,12 @@ We will refer to the directory that contains your Apache Derby installation as `
 ### Start the network server
 Start Apache Derby's network server with
 
-* on Linux/Unix/MacOS: `DERBY_HOME/bin/startNetworkServer`
-* on Windows: `DERBY_HOME\bin\startNetworkServer.bat`
+* on Linux/Unix/MacOS: 
+*`DERBY_HOME/bin/setNetworkServerCP`
+*`DERBY_HOME/bin/startNetworkServer`
+* on Windows: 
+*`DERBY_HOME\bin\setNetworkServerCP.bat`
+*`DERBY_HOME\bin\startNetworkServer.bat`
 
 If you have problems with the Java security manager when you try to start the
 Derby server, this probably means you are using Java 7 or 8 with a Derby version lower than 10.11.1.1. The solution is to upgrade Derby.
@@ -52,8 +56,12 @@ Derby server, this probably means you are using Java 7 or 8 with a Derby version
 ### Create the database tables
 Open Derby's interactive shell:
 
-* on Linux/Unix/MacOS: `DERBY_HOME/ij.sh`
-* on Windows: `DERBY_HOME\ij.bat`
+* on Linux/Unix/MacOS: 
+*`DERBY_HOME/bin/setNetworkClientCP`
+*`DERBY_HOME/ij.sh`
+* on Windows: 
+*`DERBY_HOME\bin\setNetworkClientCP.bat`
+*`DERBY_HOME\ij.bat`
 
 In the shell, run these two commands:
 

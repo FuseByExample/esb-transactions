@@ -36,10 +36,11 @@
     <description>Persistence unit for Fuse ESB Enterprise transactions example</description>
 
     <!--
-      For this demo, we are using OpenJPA as our JPA implementation.
-      TODO: Add another example using Hibernate as the JPA implementation.
+      For this demo, we are using Hibernate as our JPA implementation.
     -->
-    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+    <!--provider>org.hibernate.jpa.HibernatePersistenceProvider</provider-->
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <!--jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/DataSource)</jta-data-source-->
 
     <!--
       The data sources have been defined and published into the OSGi Service Registry by the `datasource' module.
@@ -64,9 +65,13 @@
         which is sufficient to select managed mode (for container-managed JTA transactions).
       -->
       <!--property name="openjpa.ConnectionFactoryMode" value="managed"/-->
-      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      <property name="hibernate.max_fetch_depth" value="3"/>
+      <property name="hibernate.hbm2ddl.auto" value="create"/>
+      <property name="hibernate.show_sql" value="false"/>
+      <!--property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
       <property name="openjpa.jdbc.DBDictionary" value="derby"/>
-      <property name="openjpa.Log" value="DefaultLevel=INFO"/>
+      <property name="openjpa.Log" value="DefaultLevel=INFO"/-->
     </properties>
 
   </persistence-unit>
