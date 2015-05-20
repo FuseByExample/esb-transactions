@@ -34,11 +34,11 @@
   <dependencies>
 
 
-   <dependency>
+   <!--dependency>
       <groupId>org.apache.geronimo.components</groupId>
       <artifactId>geronimo-connector</artifactId>
       <version>${geronimo.connector.version}</version>
-   </dependency>
+   </dependency-->
 
    <dependency>
       <groupId>org.slf4j</groupId>

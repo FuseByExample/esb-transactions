@@ -26,15 +26,14 @@
   <name>Fuse By Example :: Transactions</name>
 
     <properties>
-        <activemq.version>5.11.0.redhat-620114</activemq.version>
+        <activemq.version>5.11.0.redhat-620118</activemq.version>
         <build.helper.maven.plugin.version>1.9.1</build.helper.maven.plugin.version>
-        <camel.version>2.15.1.redhat-620114</camel.version>
+        <camel.version>2.15.1.redhat-620118</camel.version>
         <felix.maven.bundle.plugin.version>2.5.3</felix.maven.bundle.plugin.version>
         <hibernate.version>4.2.15.Final</hibernate.version>
         <maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
         <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
         <geronimo.connector.version>3.1.1</geronimo.connector.version>
-        <openjpa.version>2.3.0</openjpa.version>
         <lifecycle.mapping.version>1.0.0</lifecycle.mapping.version>
         <slf4j.version>1.7.10</slf4j.version>
 
@@ -69,17 +68,22 @@
         <version>${camel.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.apache.openjpa</groupId>
-        <artifactId>openjpa-maven-plugin</artifactId>
-        <version>${openjpa.version}</version>
-      </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
 
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -108,32 +112,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven.resources.plugin.version}</version>
-        </plugin>
-        <!-- Eclipse m2e Lifecycle Management -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>${lifecycle.mapping.version}</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.openjpa</groupId>
-                    <artifactId>openjpa-maven-plugin</artifactId>
-                    <versionRange>${openjpa.version}</versionRange>
-                    <goals>
-                      <goal>enhance</goal>
-                      <goal>test-enhance</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
