@@ -1,52 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) Red Hat, Inc.
 
-  Red Hat licenses this file to you under the Apache License, version
-  2.0 (the "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
+     Copyright 2005-2015 Red Hat, Inc.
 
-     http://www.apache.org/licenses/LICENSE-2.0
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-  implied.  See the License for the specific language governing
-  permissions and limitations under the License.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
 -->
-<features name="transactions-example-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+<features name="esb-transactions-${project.version}">
 
-  <!--
-    This features defines the list of everything we need to run our little transactions demo
-  -->
-  <feature name="transactions-openjpa-demo">
-    <feature>jpa</feature>
-    <feature>jndi</feature>
-    <feature>camel-blueprint</feature>
-    <feature>camel-jpa</feature>
-    <feature>camel-jms</feature>
-    <feature>hibernate</feature>
-    <feature>hibernate-envers</feature>
-    <feature>hibernate-validator</feature>
-    <feature version="3.1.1">connector</feature>
+    <feature name="transactions-demo" version="${project.version}">
+        <feature>jdbc-driver-${database}</feature>
+        <feature>jpa</feature>
+        <feature>jndi</feature>
+        <feature version="${feature.camel.version}">camel-blueprint</feature>
+        <feature version="${feature.camel.version}">camel-jpa</feature>
+        <feature version="${feature.camel.version}">camel-jms</feature>
+        <feature>hibernate</feature>
+        <feature>hibernate-envers</feature>
+        <feature>hibernate-validator</feature>
+        <feature version="${feature.transaction.version}">transaction</feature>
+        <feature version="${feature.connector.version}">connector</feature>
 
-    <!-- The workaround for http://fusesource.com/issues/browse/ENTESB-633 also requires the 
-         following bundles to be installed. 
-         See Notes in datasource/src/main/resources/OSGI-INF/blueprint/datasource.xml
-    -->
-    <!--bundle>mvn:javax.validation/validation-api/1.1.0.Final</bundle-->
-    <!--bundle>mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle-->
-    <!--bundle>wrap:mvn:org.tranql/tranql-connector/1.7</bundle-->
-    <!--bundle>wrap:mvn:org.tranql/tranql-connector-derby-common/1.4</bundle-->
-    <!-- end of bundles needed for workaround -->
+        <!-- The workaround for http://fusesource.com/issues/browse/ENTESB-633 also requires the
+             following bundles to be installed.
+             See Notes in datasource/src/main/resources/OSGI-INF/blueprint/datasource.xml
+        -->
+        <!--bundle>mvn:javax.validation/validation-api/1.1.0.Final</bundle-->
+        <!--bundle>mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle-->
+        <!--bundle>wrap:mvn:org.tranql/tranql-connector/1.7</bundle-->
+        <!--bundle>wrap:mvn:org.tranql/tranql-connector-derby-common/1.4</bundle-->
+        <!-- end of bundles needed for workaround -->
 
-    <!--bundle>mvn:org.hibernate/hibernate-core/4.2.15.Final</bundle-->
-    <!--bundle>mvn:org.hibernate/hibernate-entitymanager/4.2.15.Final</bundle-->
-    <!--bundle>mvn:org.hibernate/hibernate-osgi/4.2.15.Final</bundle-->
-    <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.derby/10.9.1.0_1</bundle>
-    <bundle>mvn:org.fusesource.example.transactions/datasource/${project.version}</bundle>
-    <bundle>mvn:org.fusesource.example.transactions/database/${project.version}</bundle>
-    <bundle>mvn:org.fusesource.example.transactions/routing/${project.version}</bundle>
-  </feature>
+        <!--bundle>mvn:org.hibernate/hibernate-core/4.2.15.Final</bundle-->
+        <!--bundle>mvn:org.hibernate/hibernate-entitymanager/4.2.15.Final</bundle-->
+        <!--bundle>mvn:org.hibernate/hibernate-osgi/4.2.15.Final</bundle-->
+        <!--<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.derby/10.9.1.0_1</bundle>-->
+        <!--<bundle>mvn:org.fusesource.example.transactions/datasource/${project.version}</bundle>-->
+        <!--<bundle>mvn:org.fusesource.example.transactions/database/${project.version}</bundle>-->
+        <!--<bundle>mvn:org.fusesource.example.transactions/routing/${project.version}</bundle>-->
+        <bundle>mvn:org.jboss.fuse.examples.transactions/datasource/${project.version}</bundle>
+        <bundle>mvn:org.jboss.fuse.examples.transactions/database/${project.version}</bundle>
+        <bundle>mvn:org.jboss.fuse.examples.transactions/routing/${project.version}</bundle>
+    </feature>
+
+    <!-- DB driver features - chosen by maven filter from profile (e.g., -Ppostgresql) -->
+
+    <feature name="jdbc-driver-postgresql" version="${project.version}">
+        <bundle>wrap:mvn:org.postgresql/postgresql/${jdbc.postgresql.version}</bundle>
+        <!-- should be part of "transaction/3.1.1" feature -->
+        <bundle>mvn:org.apache.aries.transaction/org.apache.aries.transaction.jdbc/${aries.transaction.jdbc.version}</bundle>
+        <bundle>mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
+        <bundle>mvn:org.apache.commons/commons-dbcp2/${commons.dbcp2.version}</bundle>
+    </feature>
 
 </features>

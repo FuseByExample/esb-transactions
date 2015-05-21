@@ -1,66 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) Red Hat, Inc.
 
-  Red Hat licenses this file to you under the Apache License, version
-  2.0 (the "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
+     Copyright 2005-2015 Red Hat, Inc.
 
-     http://www.apache.org/licenses/LICENSE-2.0
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-  implied.  See the License for the specific language governing
-  permissions and limitations under the License.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>transactions</artifactId>
-    <groupId>org.fusesource.example</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.fusesource.example.transactions</groupId>
-  <artifactId>routing</artifactId>
-  <packaging>bundle</packaging>
+    <parent>
+        <groupId>org.jboss.fuse.examples</groupId>
+        <artifactId>esb-transactions</artifactId>
+        <version>6.2</version>
+    </parent>
 
-  <name>Fuse By Example :: Transactions :: Routing</name>
+    <groupId>org.jboss.fuse.examples.transactions</groupId>
+    <artifactId>routing</artifactId>
+    <packaging>bundle</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.fusesource.example.transactions</groupId>
-      <artifactId>database</artifactId>
-    </dependency>
+    <name>JBoss Fuse :: Examples :: Transactions :: Routing</name>
 
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-    </dependency>
+    <properties>
+        <database />
+        <osgi-import-pkg>*</osgi-import-pkg>
+        <osgi-private-pkg>
+            org.jboss.fuse.examples.transactions.routes
+        </osgi-private-pkg>
+    </properties>
 
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-camel</artifactId>
-    </dependency>
-  </dependencies>
+    <dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Private-Package>org.fusesource.example.transactions.routes</Private-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+        <dependency>
+            <groupId>org.jboss.fuse.examples.transactions</groupId>
+            <artifactId>database</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-camel</artifactId>
+        </dependency>
+
+    </dependencies>
 
 </project>

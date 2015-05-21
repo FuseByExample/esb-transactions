@@ -1,59 +1,201 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) Red Hat, Inc.
 
-  Red Hat licenses this file to you under the Apache License, version
-  2.0 (the "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
+     Copyright 2005-2015 Red Hat, Inc.
 
-     http://www.apache.org/licenses/LICENSE-2.0
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-  implied.  See the License for the specific language governing
-  permissions and limitations under the License.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <parent>
-    <artifactId>transactions</artifactId>
-    <groupId>org.fusesource.example</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-  <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jboss.fuse.examples</groupId>
+        <artifactId>esb-transactions</artifactId>
+        <version>6.2</version>
+    </parent>
 
-  <groupId>org.fusesource.example.transactions</groupId>
-  <artifactId>datasource</artifactId>
-  <packaging>bundle</packaging>
-  <name>Fuse By Example :: Transactions :: Datasource</name>
+    <groupId>org.jboss.fuse.examples.transactions</groupId>
+    <artifactId>datasource</artifactId>
+    <packaging>bundle</packaging>
 
-  <dependencies>
+    <name>JBoss Fuse :: Examples :: Transactions :: Datasource</name>
 
+    <properties>
+        <database />
+        <osgi-import-pkg>
+            javax.sql,
+            org.postgresql,
+            org.postgresql.ds,
+            org.postgresql.xa,
+            org.apache.commons.dbcp2
+        </osgi-import-pkg>
+        <osgi-export-pkg />
+    </properties>
 
-   <!--dependency>
-      <groupId>org.apache.geronimo.components</groupId>
-      <artifactId>geronimo-connector</artifactId>
-      <version>${geronimo.connector.version}</version>
-   </dependency-->
+    <dependencies>
 
-   <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-   </dependency>
+        <!--
+            commons-dbcp2 connection pool: http://commons.apache.org/proper/commons-dbcp/
+            Contains OSGi manifests
+            Pooling datasources:
+             - org.apache.commons.dbcp2.PoolingDataSource (needs explicit configuration of org.apache.commons.pool2.ObjectPool)
+             - org.apache.commons.dbcp2.BasicDataSource (uses the above with org.apache.commons.pool2.ObjectPool configured)
+            XA Enlisting, pooling datasources:
+             - org.apache.commons.dbcp2.managed.ManagedDataSource (needs explicit configuration of org.apache.commons.pool2.ObjectPool)
+             - org.apache.commons.dbcp2.managed.BasicManagedDataSource (uses the above with org.apache.commons.pool2.ObjectPool configured)
+        -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons.dbcp2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-  </dependencies>
+        <!-- Aries (for debugging) -->
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+        <dependency>
+            <groupId>org.apache.aries.transaction</groupId>
+            <artifactId>org.apache.aries.transaction.jdbc</artifactId>
+            <version>${aries.transaction.jdbc.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.aries.transaction</groupId>
+            <artifactId>org.apache.aries.transaction.manager</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.components</groupId>
+            <artifactId>geronimo-connector</artifactId>
+            <version>3.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Karaf JDBC (for debugging) -->
+
+        <dependency>
+            <groupId>org.apache.karaf.jdbc</groupId>
+            <artifactId>org.apache.karaf.jdbc.command</artifactId>
+        </dependency>
+
+        <!-- JavaEE -->
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-j2ee-connector_1.6_spec</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Other dependencies -->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources-filtered/${database}</directory>
+                <targetPath>OSGI-INF/blueprint</targetPath>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <filters>
+            <filter>src/main/resources/jdbc.properties</filter>
+        </filters>
+        <defaultGoal>compile exec:java</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>org.jboss.fuse.examples.transactions.tools.DbInsert</mainClass>
+                    <arguments>
+                        <argument>${database}</argument>
+                    </arguments>
+                    <killAfter>-1</killAfter>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>initdb</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>postgresql</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <database>postgresql</database>
+            </properties>
+            <dependencies>
+                <!--
+                    PostgreSQL:
+                    javax.sql.DataSource: org.postgresql.ds.PGSimpleDataSource (returns connections with autocommit=true!), org.postgresql.ds.PGPoolingDataSource
+                    javax.sql.XADataSource: org.postgresql.xa.PGXADataSource
+                    javax.sql.ConnectionPoolDataSource: org.postgresql.ds.PGConnectionPoolDataSource
+                -->
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.3-1102-jdbc41</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 </project>

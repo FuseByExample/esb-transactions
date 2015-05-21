@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright 2005-2015 Red Hat, Inc.
+
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
+  In order for Aries JPA to find and activate this persistence unit, we will have to add an extra MANIFEST.MF header.
+  Have a look at the pom.xml file for this module to see how this is done.
+-->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+        version="2.0">
+
+    <!-- Marking transaction-type JTA because we will be using Aries JTA to handle the transaction -->
+    <persistence-unit name="transactionsExample" transaction-type="JTA">
+        <!-- A human-readable description for the persistence unit. -->
+        <description>Persistence unit for Fuse ESB Enterprise transactions example</description>
+        <!-- For this demo, we are using Hibernate as our JPA implementation. -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!--
+          The data sources have been defined and published into the OSGi Service Registry by the `datasource' module.
+          You can also use JNDI references to refer to services in the OSGi Service Registry, which is what we're using here.
+         -->
+        <jta-data-source>osgi:service/jdbc/transactionsdbxa</jta-data-source>
+        <!-- e.g. to verify schema -->
+        <non-jta-data-source>osgi:service/jdbc/transactionsdb</non-jta-data-source>
+        <!-- Defining the entity classes that are available in this persistence unit.  In our example, we only have one entity class, i.e. Flight. -->
+        <class>org.jboss.fuse.examples.transactions.model.Flight</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <!--
+          Additional properties for configuring the persistence unit and/or the underlying JPA implementation.  In our case,
+          these properties contain additional configuration for HIbernate.
+        -->
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+            <property name="hibernate.max_fetch_depth" value="3" />
+            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.show_sql" value="false" />
+        </properties>
+    </persistence-unit>
+
+</persistence>
