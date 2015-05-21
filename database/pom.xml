@@ -41,6 +41,8 @@
             javax.persistence.criteria;version="[2.1,3)",
             javax.sql,
             org.hibernate;version="[4.2,5)",
+            org.hibernate.proxy;version="[4.2,5)",
+            javassist.util.proxy,
             org.hibernate.ejb;version="[4.2,5)"
         </osgi-import-pkg>
         <osgi-export-pkg>
