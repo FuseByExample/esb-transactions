@@ -85,7 +85,7 @@
     <!-- Camel -->
 
     <!-- ActiveMQ JMS Configuration is defined as Transacted and use global JTA TxManager -->
-    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <bean id="amq" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="configuration">
             <bean class="org.apache.camel.component.jms.JmsConfiguration">
                 <property name="connectionFactory" ref="jmsXaPoolConnectionFactory" />
