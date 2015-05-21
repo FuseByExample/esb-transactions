@@ -1,84 +1,99 @@
+<!--
+
+     Copyright 2005-2015 Red Hat, Inc.
+
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
+-->
 # ESB Transactions
 
 ## Overview
 This example will show you how to leverage the JTA transaction manager provided by Fuse ESB when working with JMS
 or JTA Camel endpoints.  We will setup a route that reads messages from a queue and inserts information into a database
-using JTA and XA transactions and deploy that onto JBoss Fuse 6.0.
+using JTA and XA transactions and deploy that onto JBoss Fuse 6.2.
 
 ## What You Will Learn
 In studying this example you will learn:
-- how to set up an XA-aware DataSource
-- how to configure a JTA persistence unit
-- how to leverage Fuse ESB's JTA and JPA support in your routes
-- how to configure a JMS component to support XA
-- how to define a transactional route
-- how to configure a ResourceManager that can recover XA transactions after a crash
+* how to set up an XA-aware DataSource
+* how to configure a JPA persistence unit
+* how to leverage Fuse ESB's JTA and JPA support in your routes
+* how to configure a JMS component to support XA
+* how to define a transactional route
+* how to configure a ResourceManager that can recover XA transactions after a crash
 
+# Initial setup
+
+We will refer to the root directory of `camel-persistence-part2` project as `$PROJECT_HOME`.
 
 ## Prerequisites
 Before building and running this example you need:
 
-* Maven 3.0.4 or higher
+* Maven 3.2.3 or higher
 * JDK 1.7
 * JBoss Fuse 6.2.0
-* Apache Derby 10.11.1.1 or higher
-
-Note: If you use Java 7 or 8, you _must_ install Derby version of at least 10.11.1.1 to avoid problems with the Java security manager.
+* Docker-enabled operating system
 
 ## Files in the Example
 * `pom.xml` - the Maven POM file for building the example
-* `database` - contains the persistence unit definition and the JPA entity beans
 * `datasource` - contains the JDBC data source definition
-* `features` - contains the Apache Karaf features definition that allows for easy installation of this example
+* `database` - contains the persistence unit definition and the JPA entity beans
 * `routing` - contains the transactional Camel routes
+* `features` - contains the Apache Karaf features definition that allows for easy installation of this example
 
 For more information about these Maven modules, have a look at the README.md file in every module directory.
 
-## Setting up the database server
-For this example, we will be using Apache Derby as our database server.  Before installing the demo, we need to set up
-the server and create the database tables we will be using.
+# Setting up docker-based databases
 
-We will refer to the directory that contains your Apache Derby installation as `DERBY_HOME`
+To perform tests in more realistic environments, we can leverage the power of Docker to run more advanced database servers.
+Of course you can use existing database instances. The below examples are just here for completeness.
 
-### Start the network server
-Start Apache Derby's network server with
+## PostgreSQL database
 
-* on Linux/Unix/MacOS: 
-*`DERBY_HOME/bin/setNetworkServerCP`
-*`DERBY_HOME/bin/startNetworkServer`
-* on Windows: 
-*`DERBY_HOME\bin\setNetworkServerCP.bat`
-*`DERBY_HOME\bin\startNetworkServer.bat`
+We can use *official* PostgreSQL docker image available at [docker hub](https://registry.hub.docker.com/_/postgres/).
+You can use any of available methods to access PostgreSQL server (e.g., by mapping ports or connecting to containers IP address directly).
 
-If you have problems with the Java security manager when you try to start the
-Derby server, this probably means you are using Java 7 or 8 with a Derby version lower than 10.11.1.1. The solution is to upgrade Derby.
+1. Start PostgreSQL server docker container:
 
-### Create the database tables
-Open Derby's interactive shell:
+        $ docker run -d --name fuse-postgresql-server -e POSTGRES_USER=fuse -e POSTGRES_PASSWORD=fuse -p 5432:5432 postgres:9.4
 
-* on Linux/Unix/MacOS: 
-*`DERBY_HOME/bin/setNetworkClientCP`
-*`DERBY_HOME/ij.sh`
-* on Windows: 
-*`DERBY_HOME\bin\setNetworkClientCP.bat`
-*`DERBY_HOME\ij.bat`
+2. Create `transactions` database from the `fuse-postgresql-server` container:
 
-In the shell, run these two commands:
+        $ docker exec -ti fuse-postgresql-server /bin/bash
+        root@b052efff5a53:/# psql -U fuse -d fuse
+        psql (9.4.0)
+        Type "help" for help.
+        fuse=# create database transactions owner fuse encoding 'utf8';
+        CREATE DATABASE
+        fuse=# \q
 
-    ij> connect 'jdbc:derby://localhost:1527/transactions;create=true';
-    ij> CREATE TABLE flights (
-          number VARCHAR(12) NOT NULL,
-          departure VARCHAR(3),
-          arrival VARCHAR(3),
-          PRIMARY KEY (number)
-        );
+3. Initialize database `transactions` by creating schema, table and populating the table with data.
 
-To be sure the tables got created successfully, run one more command:
+    Simply run:
 
-    ij> select * from flights;
+        $ cd $PROJECT_HOME/datasource
+        $ mvn -Ppostgresql
 
-If the latter command shows you the empty table you just created, you're ready to move along with this demo.  Leave `ij`
-running for now, we will use it again later to verify that our messages are being processed correctly.
+    This will produce standard Maven output with single information:
+
+        [INFO] --- exec-maven-plugin:1.3.2:java (default-cli) @ datasource ---
+        10:39:54.826 INFO  [o.j.f.e.t.t.DbInsert] : Database postgresql initialized successfully
+
+4. Configure PostgreSQL database to allow XA transactions by setting `max_prepared_transactions` to the value equal or greater
+than `max_connections` setting (`100` in the case of `postgres:9.4` image).
+
+        root@b052efff5a53:/# sed -i 's/^#max_prepared_transactions = 0/max_prepared_transactions = 200/' /var/lib/postgresql/data/postgresql.conf
+
+5. Restart `fuse-postgresql-server` container. Your PostgreSQL database is ready to use.
 
 ## Building the Example
 In the directory where this README.md file is found, run `mvn clean install` to build the example.

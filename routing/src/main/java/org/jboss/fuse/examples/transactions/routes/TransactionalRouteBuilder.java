@@ -1,28 +1,26 @@
 /**
- * Copyright (c) Red Hat, Inc.
+ *  Copyright 2005-2015 Red Hat, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Red Hat licenses this file to you under the Apache License, version
+ *  2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied.  See the License for the specific language governing
+ *  permissions and limitations under the License.
  */
-package org.fusesource.example.transactions.routes;
+package org.jboss.fuse.examples.transactions.routes;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
-import org.fusesource.example.transactions.database.Flight;
+import org.jboss.fuse.examples.transactions.model.Flight;
 
-import java.util.Random;
-
-import static org.fusesource.example.transactions.routes.Airports.randomAirport;
+import static org.jboss.fuse.examples.transactions.routes.Airports.randomAirport;
 
 /**
  * Camel route builder defining our transactional route.  Because we want to maximize the level of support Spring offers for transactions,
@@ -35,10 +33,10 @@ public class TransactionalRouteBuilder extends SpringRouteBuilder {
     @Override
     public void configure() throws Exception {
         from("amq://Input.Flights?username=admin&password=admin")
-            .log("Received JMS message ${body}")
-            .process(new ConvertToJpaBeanProcessor())
-            .log("Storing ${body} in the database")
-            .to("jpa://org.fusesource.example.transactions.database.Flight");
+                .log("Received JMS message ${body}")
+                .process(new ConvertToJpaBeanProcessor())
+                .log("Storing ${body} in the database")
+                .to("jpa://org.jboss.fuse.examples.transactions.model.Flight");
     }
 
     /*

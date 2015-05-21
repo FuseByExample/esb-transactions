@@ -1,20 +1,21 @@
 /**
- * Copyright (c) Red Hat, Inc.
+ *  Copyright 2005-2015 Red Hat, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Red Hat licenses this file to you under the Apache License, version
+ *  2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied.  See the License for the specific language governing
+ *  permissions and limitations under the License.
  */
-package org.fusesource.example.transactions.database;
+package org.jboss.fuse.examples.transactions.model;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 /**
@@ -24,15 +25,18 @@ import javax.persistence.*;
  * - an arrival airport
  */
 @Entity
+@Access(AccessType.FIELD)
 @Table(name = "FLIGHTS")
-public class Flight {
-
-    private String number;
-    private String departure;
-    private String arrival;
+public class Flight implements Serializable {
 
     @Id
     @Column(length = 12)
+    private String number;
+    @Column(length = 3)
+    private String departure;
+    @Column(length = 3)
+    private String arrival;
+
     public String getNumber() {
         return number;
     }
@@ -41,7 +45,6 @@ public class Flight {
         this.number = number;
     }
 
-    @Column(length = 3)
     public String getDeparture() {
         return departure;
     }
@@ -50,7 +53,6 @@ public class Flight {
         this.departure = departure;
     }
 
-    @Column(length = 3)
     public String getArrival() {
         return arrival;
     }
@@ -63,4 +65,5 @@ public class Flight {
     public String toString() {
         return String.format("[flight %s from %s to %s]", number, departure, arrival);
     }
+
 }

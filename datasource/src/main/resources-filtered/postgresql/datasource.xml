@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+     Copyright 2005-2015 Red Hat, Inc.
+
+     Red Hat licenses this file to you under the Apache License, version
+     2.0 (the "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.3.0"
+        xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.4.0"
+        xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+
+    <!-- Blueprint CM property placeholder - integrated with config admin -->
+    <cm:property-placeholder persistent-id="org.jboss.fuse.examples.persistence2" update-strategy="reload"
+            placeholder-prefix="[[" placeholder-suffix="]]">
+        <cm:default-properties>
+            <!-- These properties will be replaced at build time by Maven  -->
+            <cm:property name="jdbc.url" value="${jdbc.postgresql.url}" />
+            <cm:property name="jdbc.user" value="${jdbc.postgresql.user}" />
+            <cm:property name="jdbc.password" value="${jdbc.postgresql.password}" />
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <!--
+        PostgreSQL datasources - used to obtain physical (xa or non-xa) connection to database
+        If applications use it directly, no JTA behavior will be applied (like enlisting in global JTA transactions)
+    -->
+
+    <!-- non-XA, pooling, non-enlisting data source sprcific for PostgreSQL database -->
+    <!--
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="[[jdbc.url]]" />
+        <property name="username" value="[[jdbc.user]]" />
+        <property name="password" value="[[jdbc.password]]" />
+        <property name="defaultAutoCommit" value="false" />
+    </bean>
+    -->
+    <!-- non-XA, non-pooling, non-enlisting data source sprcific for PostgreSQL database -->
+    <bean id="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
+        <property name="url" value="[[jdbc.url]]" />
+        <property name="user" value="[[jdbc.user]]" />
+        <property name="password" value="[[jdbc.password]]" />
+        <property name="applicationName" value="Fuse" />
+    </bean>
+
+    <!-- XA, non-pooling, non-enlisting data source specific for PostgreSQL database -->
+    <bean id="xaDataSource" class="org.postgresql.xa.PGXADataSource">
+        <!-- These properties will be replaced at runtime by Aries-Blueprint -->
+        <property name="url" value="[[jdbc.url]]" />
+        <!-- credentials needed for XA recovery -->
+        <property name="user" value="[[jdbc.user]]" />
+        <property name="password" value="[[jdbc.password]]" />
+        <property name="applicationName" value="Fuse" />
+    </bean>
+
+    <!--
+        OSGi javax.sql.(XA)DataSource services will be picked up by org.apache.aries.transaction.jdbc.internal.Activator
+        see: esb-transactions/datasource/README.md
+    -->
+
+    <service ref="dataSource" interface="javax.sql.DataSource">
+        <service-properties>
+            <!--
+                This will allow to lookup this OSGi service using two JNDI names:
+                 - "osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/transactionsdb)"
+                 - "osgi:service/jdbc/transactionsdb"
+                Using any.other.key makes the service available only using JNDI name:
+                 - "osgi:service/javax.sql.DataSource/(any.other.key=jdbc/transactionsdb)"
+            -->
+            <entry key="osgi.jndi.service.name" value="jdbc/transactionsdb" />
+            <entry key="aries.xa.name" value="transactionsdb" /><!-- Irrelevant for non-XA datasources -->
+            <entry key="aries.xa.username" value="[[jdbc.user]]" />
+            <entry key="aries.xa.password" value="[[jdbc.password]]" />
+            <entry key="aries.xa.pooling" value="true" />
+            <entry key="aries.xa.poolMaxSize" value="10" />
+            <entry key="aries.xa.poolMinSize" value="0" />
+            <entry key="aries.xa.transaction" value="local" /><!-- default for javax.sql.DataSource -->
+            <entry key="aries.xa.exceptionSorter" value="known" />
+        </service-properties>
+    </service>
+
+    <service ref="xaDataSource" interface="javax.sql.XADataSource">
+        <service-properties>
+            <!--
+                This will allow to lookup this OSGi service using two JNDI names:
+                 - "osgi:service/javax.sql.XADataSource/(osgi.jndi.service.name=jdbc/transactionsdbxa)"
+                 - "osgi:service/jdbc/transactionsdbxa"
+                Using any.other.key makes the service available only using JNDI name:
+                 - "osgi:service/javax.sql.XADataSource/(any.other.key=jdbc/transactionsdbxa)"
+            -->
+            <entry key="osgi.jndi.service.name" value="jdbc/transactionsdbxa" />
+            <entry key="aries.xa.name" value="transactionsdbxa" /><!-- Used for XA recovery -->
+            <entry key="aries.xa.username" value="[[jdbc.user]]" />
+            <entry key="aries.xa.password" value="[[jdbc.password]]" />
+            <entry key="aries.xa.pooling" value="true" />
+            <entry key="aries.xa.poolMaxSize" value="10" />
+            <entry key="aries.xa.poolMinSize" value="0" />
+            <entry key="aries.xa.transaction" value="xa" /><!-- default for javax.sql.XADataSource -->
+            <entry key="aries.xa.exceptionSorter" value="known" />
+        </service-properties>
+    </service>
+
+</blueprint>
