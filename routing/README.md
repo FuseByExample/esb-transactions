@@ -21,7 +21,7 @@ Afterwards, we define our two Camel components and link them up with the correct
 The Blueprint XML file will also define the CamelContext itself, the Camel routes themselves are defined in a Java class.
 
 ## TransactionalRouteBuilder
-The `src/main/java/org/fusesource/example/transactions/routes/TransactionalRouteBuilder.java` class defines the actual
+The `src/main/java/org/jboss/fuse/examples/transactions/routes/TransactionalRouteBuilder.java` class defines the actual
 Camel routes.  The code looks like a plain route from a JMS endpoint to a JPA endpoint, but there 2 little things to notice here:
 
 * the class extends SpringRouteBuilder, to allow for seamless integration between the route and Spring's support for transactions

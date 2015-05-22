@@ -13,22 +13,25 @@ is exported into the OSGi Service Registry.  We can use the Fuse ESB Enterprise 
 First, find the bundle id for the bundle called "Fuse By Example :: Transactions :: Database" by using the `osgi:list` command.
 You can use `grep` to filter the list of bundles and quickly find the right one.
 
-    FuseESB:karaf@root> osgi:list | grep Transactions
-    [ 268] [Active     ] [Created     ] [       ] [   60] Fuse By Example :: Transactions :: Datasource (1.0.0.SNAPSHOT)
-    [ 269] [Active     ] [            ] [       ] [   60] Fuse By Example :: Transactions :: Database (1.0.0.SNAPSHOT)
-    [ 270] [Active     ] [            ] [Started] [   60] Fuse By Example :: Transactions :: Routing (1.0.0.SNAPSHOT)
-
-In this example, the bundle id is 269.  Using the `osgi:ls` command, you can see the `javax.persistence.EntityManagerFactory` listed as
+   JBossFuse:karaf@root> osgi:list | grep -i transactions
+   [ 298] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Datasource (6.2.0)
+   [ 299] [Active     ] [            ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Database (6.2.0)
+   [ 300] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Routing (6.2.0)
+   
+In this example, the bundle id is 299.  Using the `osgi:ls` command, you can see the `javax.persistence.EntityManagerFactory` listed as
 a service.
 
-    FuseESB:karaf@root> osgi:ls 269
-
-    Fuse By Example :: Transactions :: Database (269) provides:
-    -----------------------------------------------------------
-    objectClass = javax.persistence.EntityManagerFactory
+    JBossFuse:karaf@root> osgi:ls 299
+    
+    JBoss Fuse :: Examples :: Transactions :: Database (299) provides:
+    ------------------------------------------------------------------
+    objectClass = [javax.persistence.EntityManagerFactory]
     org.apache.aries.jpa.container.managed = true
     org.apache.aries.jpa.default.unit.name = false
-    osgi.unit.name = datasourceExample
-    osgi.unit.provider = org.apache.openjpa.persistence.PersistenceProviderImpl
-    osgi.unit.version = 1.0.0.SNAPSHOT
-    service.id = 418
+    osgi.unit.name = transactionsExample
+    osgi.unit.provider = org.hibernate.jpa.HibernatePersistenceProvider
+    osgi.unit.version = 6.2.0
+    service.id = 635
+
+    
+    

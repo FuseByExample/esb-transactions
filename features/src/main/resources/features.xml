@@ -31,32 +31,15 @@
         <feature version="${feature.transaction.version}">transaction</feature>
         <feature version="${feature.connector.version}">connector</feature>
 
-        <!-- The workaround for http://fusesource.com/issues/browse/ENTESB-633 also requires the
-             following bundles to be installed.
-             See Notes in datasource/src/main/resources/OSGI-INF/blueprint/datasource.xml
-        -->
-        <!--bundle>mvn:javax.validation/validation-api/1.1.0.Final</bundle-->
-        <!--bundle>mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle-->
-        <!--bundle>wrap:mvn:org.tranql/tranql-connector/1.7</bundle-->
-        <!--bundle>wrap:mvn:org.tranql/tranql-connector-derby-common/1.4</bundle-->
-        <!-- end of bundles needed for workaround -->
-
-        <!--bundle>mvn:org.hibernate/hibernate-core/4.2.15.Final</bundle-->
-        <!--bundle>mvn:org.hibernate/hibernate-entitymanager/4.2.15.Final</bundle-->
-        <!--bundle>mvn:org.hibernate/hibernate-osgi/4.2.15.Final</bundle-->
-        <!--<bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.derby/10.9.1.0_1</bundle>-->
-        <!--<bundle>mvn:org.fusesource.example.transactions/datasource/${project.version}</bundle>-->
-        <!--<bundle>mvn:org.fusesource.example.transactions/database/${project.version}</bundle>-->
-        <!--<bundle>mvn:org.fusesource.example.transactions/routing/${project.version}</bundle>-->
         <bundle>mvn:org.jboss.fuse.examples.transactions/datasource/${project.version}</bundle>
         <bundle>mvn:org.jboss.fuse.examples.transactions/database/${project.version}</bundle>
         <bundle>mvn:org.jboss.fuse.examples.transactions/routing/${project.version}</bundle>
     </feature>
 
     <!-- DB driver features - chosen by maven filter from profile (e.g., -Ppostgresql) -->
-
     <feature name="jdbc-driver-postgresql" version="${project.version}">
         <bundle>wrap:mvn:org.postgresql/postgresql/${jdbc.postgresql.version}</bundle>
+
         <!-- should be part of "transaction/3.1.1" feature -->
         <bundle>mvn:org.apache.aries.transaction/org.apache.aries.transaction.jdbc/${aries.transaction.jdbc.version}</bundle>
         <bundle>mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
