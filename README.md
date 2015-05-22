@@ -97,7 +97,6 @@ than `max_connections` setting (`100` in the case of `postgres:9.4` image).
 
 5. Restart `fuse-postgresql-server` container. Your PostgreSQL database is ready to use.  
         
-        $ docker exec -ti fuse-postgresql-server /bin/bash
         docker restart fuse-postgresql-server 
 
 
