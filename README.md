@@ -33,15 +33,15 @@ In studying this example you will learn:
 
 # Initial setup
 
-We will refer to the root directory of `camel-persistence-part2` project as `$PROJECT_HOME`.
+We will refer to the root directory of `esb-transactions` project as `$PROJECT_HOME`.
 
 ## Prerequisites
 Before building and running this example you need:
 
 * Maven 3.2.3 or higher
-* JDK 1.7
+* JDK 1.7 or JDK 1.8
 * JBoss Fuse 6.2.0
-* Docker-enabled operating system
+* Docker-enabled operating system   TODO more info here?
 
 ## Files in the Example
 * `pom.xml` - the Maven POM file for building the example
@@ -54,19 +54,21 @@ For more information about these Maven modules, have a look at the README.md fil
 
 # Setting up docker-based databases
 
+TODO explain where to get DOCKER?  Explain alternatives?
+
 To perform tests in more realistic environments, we can leverage the power of Docker to run more advanced database servers.
 Of course you can use existing database instances. The below examples are just here for completeness.
 
 ## PostgreSQL database
 
-We can use *official* PostgreSQL docker image available at [docker hub](https://registry.hub.docker.com/_/postgres/).
-You can use any of available methods to access PostgreSQL server (e.g., by mapping ports or connecting to containers IP address directly).
+We will use the *official* PostgreSQL docker image available at [docker hub](https://registry.hub.docker.com/_/postgres/).
+You can use any of the available methods to access PostgreSQL server (e.g., by mapping ports or connecting to containers IP address directly) if you'd prefer.
 
-1. Start PostgreSQL server docker container:
+1. Start the PostgreSQL server docker container:
 
         $ docker run -d --name fuse-postgresql-server -e POSTGRES_USER=fuse -e POSTGRES_PASSWORD=fuse -p 5432:5432 postgres:9.4
 
-2. Create `transactions` database from the `fuse-postgresql-server` container:
+2. Connect to the docker container and run the psql client to create the `transactions` database from the `fuse-postgresql-server` container:
 
         $ docker exec -ti fuse-postgresql-server /bin/bash
         root@b052efff5a53:/# psql -U fuse -d fuse
@@ -75,8 +77,10 @@ You can use any of available methods to access PostgreSQL server (e.g., by mappi
         fuse=# create database transactions owner fuse encoding 'utf8';
         CREATE DATABASE
         fuse=# \q
+        
+        Enter control-D to exit psql and control-D again to disconnect from docker.
 
-3. Initialize database `transactions` by creating schema, table and populating the table with data.
+3. Initialize the `transactions` database by creating the 'transactions' schema and 'flights' table.
 
     Simply run:
 
@@ -93,17 +97,21 @@ than `max_connections` setting (`100` in the case of `postgres:9.4` image).
 
         root@b052efff5a53:/# sed -i 's/^#max_prepared_transactions = 0/max_prepared_transactions = 200/' /var/lib/postgresql/data/postgresql.conf
 
-5. Restart `fuse-postgresql-server` container. Your PostgreSQL database is ready to use.
+5. Restart `fuse-postgresql-server` container. Your PostgreSQL database is ready to use.  
+        
+        $ docker exec -ti fuse-postgresql-server /bin/bash
+        docker restart fuse-postgresql-server 
+
 
 ## Building the Example
-In the directory where this README.md file is found, run `mvn clean install` to build the example.
+In the $PROJECT_HOME directory, run `mvn clean install` to build the example. 
 
 ## Running the Example
 We will refer to the directory that contains your Fuse ESB installation as `$ESB_HOME`.
 
 ### Configuring additional users
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
-message broker and send messages to a queue.  Edit the `$ESB_HOME/etc/users.properties` file and add a line that says:
+message broker and send messages to a queue.  Edit the c file and add a line that says:
 
     admin=admin,Administrator
 
@@ -129,9 +137,21 @@ First, install the feature itself using this command:
 
 Using `osgi:list` in the console, you should now see this demo's bundles at the bottom of the list.
 
+### Use hawtio to send JMS messages
+Open the Fuse Admin Console by going to http://localhost:8181/hawtio/index.html and login using the username and password you specified in $ESB_HOME/etc/users.properties
+
+    Click on ActiveMQ at the top of the page
+    In the left column expand 'Queue' and click on 'Input.flights'
+    Click on 'Send' at the top of the page
+    Set the 'Payload format' to 'Plain text'
+    Send a few messages to the queue.  The message content will become the flight ID in the database, so just use your imagination for that one ;)
+    
+The ESB log file will contain logging output similar to :
+2015-05-22 11:25:37,593 | INFO  | r[Input.Flights] | route1 | ?  ? | 198 - org.apache.camel.camel-core - 2.15.1.redhat-620118 | Received JMS message TXL-1000
+2015-05-22 11:25:37,594 | INFO  | r[Input.Flights] | route1 | ?  ? | 198 - org.apache.camel.camel-core - 2.15.1.redhat-620118 | Storing [flight TXL-1000 from DEN to LAS] in the database
 
 ### Using jconsole to send JMS messages
-Open `jconsole` and connect to the running Fuse ESB Enterprise instance.  If the instance is running locally, connect to
+You can also demonstrate this example using jconsole.  Open `jconsole` and connect to the running Fuse ESB Enterprise instance.  If the instance is running locally, connect to
 the process called `org.apache.karaf.main.Main`.
 
 On the MBeans tab, navigate to `org.apache.activemq` &rarr; `Broker` &rarr; `amq` &rarr; `Queue` &rarr; `Input.Flights`.  Send a few
@@ -140,23 +160,26 @@ and third parameter, use the username and password you configured earlier.  The 
 in the database, so just use your imagination for that one ;)
 
 The ESB log file will contain logging output similar to :
-2013-03-13 12:33:28,946 | INFO| r[Input.Flights] | route1 | ? ? | 130 - org.apache.camel.camel-core - 2.10.0.redhat-60015 | Received JMS message TXL-1000
-2013-03-13 12:33:28,958 | INFO| r[Input.Flights] | route1 | ? ? | 130 - org.apache.camel.camel-core - 2.10.0.redhat-60015 | Storing [flight TXL-1000 from DEN to LAS] in the database
+2015-05-22 11:25:37,593 | INFO  | r[Input.Flights] | route1 | ?  ? | 198 - org.apache.camel.camel-core - 2.15.1.redhat-620118 | Received JMS message TXL-1000
+2015-05-22 11:25:37,594 | INFO  | r[Input.Flights] | route1 | ?  ? | 198 - org.apache.camel.camel-core - 2.15.1.redhat-620118 | Storing [flight TXL-1000 from DEN to LAS] in the database
 
 
 ### Verifying the result
-Now, head back to `ij` and run this SQL query:
+To verify the result of sending message, reconnect to docker and run the 'psql' client
 
-    ij> select * from flights;
+    $ docker exec -ti fuse-postgresql-server /bin/bash
+    root@895273b0fb36:/# psql -U fuse -d transactions
+    psql (9.4.1)
+    Type "help" for help.
+    
+    transactions=# select * from transactions.flights;
 
 You will see new database rows for every message you sent, using the message body as the flight number.
 
 ## More information
 For more information see:
 
-* JBoss Fuse 6.1 - [Transaction Guide](https://access.redhat.com/site/documentation/en-US/Red_Hat_JBoss_Fuse/6.1/html/Transaction_Guide/index.html)
-
-
+* JBoss Fuse 6.2 - [Transaction Guide](https://access.redhat.com/site/documentation/en-US/Red_Hat_JBoss_Fuse/6.2/html/Transaction_Guide/index.html)
 
 ## NOTE: 
 For more verbose logging about the use of XA transactions, this logging 
