@@ -135,7 +135,7 @@ First, install the feature itself using this command:
 Using `osgi:list` in the console, you should now see this demo's bundles at the bottom of the list.
 
 ### Use hawtio to send JMS messages
-Open the Fuse Admin Console by going to http://localhost:8181/hawtio and login using the username and password you specified in $FUSE_HOME/etc/users.properties
+Open the JBoss Fuse Management Console by going to http://localhost:8181/hawtio and login using the username and password you specified in $FUSE_HOME/etc/users.properties
 
     Click on ActiveMQ at the top of the page
     In the left column expand 'Queue' and click on 'Input.flights'
