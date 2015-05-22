@@ -39,7 +39,7 @@
         If applications use it directly, no JTA behavior will be applied (like enlisting in global JTA transactions)
     -->
 
-    <!-- non-XA, pooling, non-enlisting data source sprcific for PostgreSQL database -->
+    <!-- non-XA, pooling, non-enlisting data source specificly for PostgreSQL database -->
     <!--
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="org.postgresql.Driver" />

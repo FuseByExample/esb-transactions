@@ -53,14 +53,12 @@
     <dependencies>
 
         <!-- Camel -->
-
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
         </dependency>
 
         <!-- Aries and related -->
-
         <dependency>
             <groupId>org.apache.aries</groupId>
             <artifactId>org.apache.aries.util-r42</artifactId>

@@ -41,7 +41,7 @@ Before building and running this example you need:
 * Maven 3.2.3 or higher
 * JDK 1.7 or JDK 1.8
 * JBoss Fuse 6.2.0
-* Docker-enabled operating system   TODO more info here?
+* Docker-enabled operating system
 
 ## Files in the Example
 * `pom.xml` - the Maven POM file for building the example
@@ -53,8 +53,6 @@ Before building and running this example you need:
 For more information about these Maven modules, have a look at the README.md file in every module directory.
 
 # Setting up docker-based databases
-
-TODO explain where to get DOCKER?  Explain alternatives?
 
 To perform tests in more realistic environments, we can leverage the power of Docker to run more advanced database servers.
 Of course you can use existing database instances. The below examples are just here for completeness.
@@ -107,7 +105,7 @@ than `max_connections` setting (`100` in the case of `postgres:9.4` image).
 In the $PROJECT_HOME directory, run `mvn clean install` to build the example. 
 
 ## Running the Example
-We will refer to the directory that contains your Fuse ESB installation as `$ESB_HOME`.
+We will refer to the directory that contains your Fuse ESB installation as `$FUSE_HOME`.
 
 ### Configuring additional users
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
@@ -128,17 +126,17 @@ Start JBoss Fuse with these commands
 To allow for easy installation of the example, we created a features descriptor.  On Fuse ESB's console, add the
 extra features repository with this command:
 
-    JBossFuse:karaf@root> features:addurl mvn:org.fusesource.example.transactions/features/1.0-SNAPSHOT/xml/features
+    JBossFuse:karaf@root> features:addurl mvn:org.jboss.fuse.examples.transactions/features/6.2/xml/features
 
 ### Install the example using the feature
 First, install the feature itself using this command:
 
-    JBossFuse:karaf@root> features:install transactions-openjpa-demo
+    JBossFuse:karaf@root> features:install transactions-demo
 
 Using `osgi:list` in the console, you should now see this demo's bundles at the bottom of the list.
 
 ### Use hawtio to send JMS messages
-Open the Fuse Admin Console by going to http://localhost:8181/hawtio/index.html and login using the username and password you specified in $ESB_HOME/etc/users.properties
+Open the Fuse Admin Console by going to http://localhost:8181/hawtio and login using the username and password you specified in $FUSE_HOME/etc/users.properties
 
     Click on ActiveMQ at the top of the page
     In the left column expand 'Queue' and click on 'Input.flights'
