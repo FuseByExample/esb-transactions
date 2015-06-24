@@ -28,7 +28,7 @@
         <!-- A human-readable description for the persistence unit. -->
         <description>Persistence unit for Fuse ESB Enterprise transactions example</description>
         <!-- For this demo, we are using Hibernate as our JPA implementation. -->
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <!--
           The data sources have been defined and published into the OSGi Service Registry by the `datasource' module.
           You can also use JNDI references to refer to services in the OSGi Service Registry, which is what we're using here.
@@ -44,7 +44,7 @@
           these properties contain additional configuration for HIbernate.
         -->
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect" />
             <property name="hibernate.max_fetch_depth" value="3" />
             <property name="hibernate.hbm2ddl.auto" value="create" />
             <property name="hibernate.show_sql" value="false" />

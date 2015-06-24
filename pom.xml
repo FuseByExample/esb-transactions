@@ -45,6 +45,7 @@
         <karaf.version>2.4.0.redhat-620133</karaf.version>
         <camel.version>2.15.1.redhat-620133</camel.version>
         <activemq.version>5.11.0.redhat-620133</activemq.version>
+        <!--hibernate.version>4.2.19.Final-redhat-1</hibernate.version-->
         <hibernate.version>4.2.19.Final</hibernate.version>
         <aries.transaction.jdbc.version>2.1.1</aries.transaction.jdbc.version>
         <spring.version>3.2.12.RELEASE</spring.version>
@@ -204,9 +205,19 @@
                 <version>${hibernate.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-osgi</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-envers</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.1-api</artifactId>
-                <version>1.0.0.Final</version>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+                <version>1.0.1.Final</version>
             </dependency>
 
             <!-- Karaf JDBC (for debugging) -->
