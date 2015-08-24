@@ -64,10 +64,7 @@
 	<build>
 		<plugins>
 			<!-- Felix -->
-			<!-- Additional configuration for Felix' maven-bundle-plugin. We are defining 
-				the Export-Package header to ensure our entity classes are available to other 
-				bundles. We also add the 'Meta-Persistence' header so Aries JPA will discover 
-				and activate the persistence unit defined in the persistence.xml file. -->
+			<!-- Additional configuration for Felix' maven-bundle-plugin.  -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
