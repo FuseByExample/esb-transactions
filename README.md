@@ -191,3 +191,11 @@ log:set DEBUG org.apache.geronimo.transaction.log
 log:set DEBUG org.jencks
 
 This will log every tx.begin, tx.prepare and tx.commit operation to data/log/fuse.log.
+
+## Installation in Fabric mode:
+In Routing component(routing.xml) user might have to change activemq port if deployed in a different container than root.
+
+profile-create --parent feature-camel transactions-demo.profile
+profile-edit --repositories mvn:org.jboss.fuse.examples.transactions/features/6.2/xml/features transactions-demo.profile
+profile-edit --feature activemq-camel --feature jpa --feature transactions-demo transactions-demo.profile
+
