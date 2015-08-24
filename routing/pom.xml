@@ -58,7 +58,8 @@
             <artifactId>activemq-camel</artifactId>
         </dependency>
 
-	</dependencies>
+    </dependencies>
+	
 	<!-- maven-bundle-plugin with _removeheaders MANIFEST header is added to make this example run in fabric environment as well. -->
 	<build>
 		<plugins>
