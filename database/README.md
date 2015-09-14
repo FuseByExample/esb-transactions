@@ -13,25 +13,22 @@ is exported into the OSGi Service Registry.  We can use the Fuse ESB Enterprise 
 First, find the bundle id for the bundle called "Fuse By Example :: Transactions :: Database" by using the `osgi:list` command.
 You can use `grep` to filter the list of bundles and quickly find the right one.
 
-   JBossFuse:karaf@root> osgi:list | grep -i transactions
-   [ 298] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Datasource (6.2.0)
-   [ 299] [Active     ] [            ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Database (6.2.0)
-   [ 300] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Routing (6.2.0)
+    JBossFuse:karaf@root> osgi:list | grep -i transactions
+    [ 295] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Datasource (6.2.1)
+    [ 296] [Active     ] [            ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Database (6.2.1)
+    [ 297] [Active     ] [Created     ] [       ] [   80] JBoss Fuse :: Examples :: Transactions :: Routing (6.2.1)
    
-In this example, the bundle id is 299.  Using the `osgi:ls` command, you can see the `javax.persistence.EntityManagerFactory` listed as
+In this example, the bundle id is 296.  Using the `osgi:ls` command, you can see the `javax.persistence.EntityManagerFactory` listed as
 a service.
 
-    JBossFuse:karaf@root> osgi:ls 299
+    JBossFuse:karaf@root> osgi:ls 296
     
-    JBoss Fuse :: Examples :: Transactions :: Database (299) provides:
+    JBoss Fuse :: Examples :: Transactions :: Database (296) provides:
     ------------------------------------------------------------------
     objectClass = [javax.persistence.EntityManagerFactory]
     org.apache.aries.jpa.container.managed = true
     org.apache.aries.jpa.default.unit.name = false
     osgi.unit.name = transactionsExample
-    osgi.unit.provider = org.hibernate.jpa.HibernatePersistenceProvider
-    osgi.unit.version = 6.2.0
-    service.id = 635
-
-    
-    
+    osgi.unit.provider = org.hibernate.ejb.HibernatePersistence
+    osgi.unit.version = 6.2.1
+    service.id = 634

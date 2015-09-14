@@ -20,7 +20,7 @@
 ## Overview
 This example will show you how to leverage the JTA transaction manager provided by Fuse ESB when working with JMS
 or JTA Camel endpoints.  We will setup a route that reads messages from a queue and inserts information into a database
-using JTA and XA transactions and deploy that onto JBoss Fuse 6.2.
+using JTA and XA transactions and deploy that onto JBoss Fuse 6.2.1.
 
 ## What You Will Learn
 In studying this example you will learn:
@@ -40,7 +40,7 @@ Before building and running this example you need:
 
 * Maven 3.2.3 or higher
 * JDK 1.7 or JDK 1.8
-* JBoss Fuse 6.2.0
+* JBoss Fuse 6.2.1
 * Docker-enabled operating system
 
 ## Files in the Example
@@ -125,7 +125,7 @@ Start JBoss Fuse with these commands
 To allow for easy installation of the example, we created a features descriptor.  On Fuse ESB's console, add the
 extra features repository with this command:
 
-    JBossFuse:karaf@root> features:addurl mvn:org.jboss.fuse.examples.transactions/features/6.2/xml/features
+    JBossFuse:karaf@root> features:addurl mvn:org.jboss.fuse.examples.transactions/features/6.2.1/xml/features
 
 ### Install the example using the feature
 First, install the feature itself using this command:
@@ -196,6 +196,6 @@ This will log every tx.begin, tx.prepare and tx.commit operation to data/log/fus
 In Routing component(routing.xml) user might have to change activemq port if deployed in a different container than root.
 
 profile-create --parent feature-camel transactions-demo.profile
-profile-edit --repositories mvn:org.jboss.fuse.examples.transactions/features/6.2/xml/features transactions-demo.profile
+profile-edit --repositories mvn:org.jboss.fuse.examples.transactions/features/6.2.1/xml/features transactions-demo.profile
 profile-edit --feature activemq-camel --feature jpa --feature transactions-demo transactions-demo.profile
 
