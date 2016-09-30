@@ -20,7 +20,7 @@
 ## Overview
 This example will show you how to leverage the JTA transaction manager provided by Fuse ESB when working with JMS
 or JTA Camel endpoints.  We will setup a route that reads messages from a queue and inserts information into a database
-using JTA and XA transactions and deploy that onto JBoss Fuse 6.2.1.
+using JTA and XA transactions and deploy that onto JBoss Fuse 6.3.0.
 
 ## What You Will Learn
 In studying this example you will learn:
@@ -40,7 +40,7 @@ Before building and running this example you need:
 
 * Maven 3.2.3 or higher
 * JDK 1.7 or JDK 1.8
-* JBoss Fuse 6.2.1
+* JBoss Fuse 6.3.0
 * Docker-enabled operating system
 
 ## Files in the Example
@@ -125,7 +125,7 @@ Start JBoss Fuse with these commands
 To allow for easy installation of the example, we created a features descriptor.  On Fuse ESB's console, add the
 extra features repository with this command:
 
-    JBossFuse:karaf@root> features:addurl mvn:org.jboss.fuse.examples.transactions/features/6.2.1/xml/features
+    JBossFuse:karaf@root> features:addurl mvn:org.jboss.fuse.examples.transactions/features/6.3.0/xml/features
 
 ### Install the example using the feature
 First, install the feature itself using this command:
@@ -176,7 +176,7 @@ You will see new database rows for every message you sent, using the message bod
 ## More information
 For more information see:
 
-* JBoss Fuse 6.2 - [Transaction Guide](https://access.redhat.com/site/documentation/en-US/Red_Hat_JBoss_Fuse/6.2/html/Transaction_Guide/index.html)
+* JBoss Fuse 6.3.0 - [Transaction Guide](https://access.redhat.com/site/documentation/en-US/Red_Hat_JBoss_Fuse/6.3/html/Transaction_Guide/index.html)
 
 ## NOTE: 
 For more verbose logging about the use of XA transactions, this logging 
@@ -184,6 +184,8 @@ configuration can be applied on the Karaf shell:
 
 log:set DEBUG org.apache.activemq.transaction
 log:set DEBUG org.springframework.transaction
+
+emacs 
 log:set DEBUG org.springframework.jms.connection.JmsTransactionManager
 log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager
 log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource
@@ -196,6 +198,6 @@ This will log every tx.begin, tx.prepare and tx.commit operation to data/log/fus
 In Routing component(routing.xml) user might have to change activemq port if deployed in a different container than root.
 
 profile-create --parent feature-camel transactions-demo.profile
-profile-edit --repositories mvn:org.jboss.fuse.examples.transactions/features/6.2.1/xml/features transactions-demo.profile
+profile-edit --repositories mvn:org.jboss.fuse.examples.transactions/features/6.3.0/xml/features transactions-demo.profile
 profile-edit --feature activemq-camel --feature jpa --feature transactions-demo transactions-demo.profile
 
