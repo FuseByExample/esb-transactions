@@ -39,12 +39,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- versions of dependencies -->
-        <jboss.fuse.bom.version>6.3.0.redhat-191</jboss.fuse.bom.version>
+        <jboss.fuse.bom.version>6.3.0.redhat-187</jboss.fuse.bom.version>
         <slf4j.version>1.7.10</slf4j.version>
         <logback.version>1.1.2</logback.version>
-        <karaf.version>2.4.0.redhat-630191</karaf.version>
-        <camel.version>2.17.0.redhat-630191</camel.version>
-        <activemq.version>5.11.0.redhat-630191</activemq.version>
+        <karaf.version>2.4.0.redhat-630187</karaf.version>
+        <camel.version>2.17.0.redhat-630187</camel.version>
+        <activemq.version>5.11.0.redhat-630187</activemq.version>
         <!--hibernate.version>4.2.19.Final-redhat-1</hibernate.version-->
         <hibernate.version>4.2.19.Final</hibernate.version>
         <aries.transaction.jdbc.version>2.1.1</aries.transaction.jdbc.version>
@@ -97,8 +97,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>redhat-ea-repository</id>
-            <url>https://maven.repository.redhat.com/earlyaccess/all</url>
+            <id>fusesource.releases</id>
+            <name>FuseSource Release Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/fs-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -112,16 +113,6 @@
         <pluginRepository>
             <id>redhat-ga-repository</id>
             <url>https://maven.repository.redhat.com/ga</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>redhat-ea-repository</id>
-            <url>https://maven.repository.redhat.com/earlyaccess/all</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
