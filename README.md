@@ -108,7 +108,7 @@ We will refer to the directory that contains your Fuse ESB installation as `$FUS
 
 ### Configuring additional users
 Before we can start Fuse ESB, we have to make sure we configure a user we can use later on to connect to the embedded
-message broker and send messages to a queue.  Edit the c file and add a line that says:
+message broker and send messages to a queue.  Edit the '$ESB_HOME/etc/users.properties file and add a line that says:
 
     admin=admin,Administrator
 
